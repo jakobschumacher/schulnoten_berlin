@@ -1,5 +1,14 @@
+---
+title: "Schulnoten in Berlin 2023 (Pankow, Lichtenberg)"
+---
+Die Sekundarschulen in Berlin (Gymnasium, Integrierte Sekundarschule, Gemeinschaftsschule) haben Aufnahmekritierien für die Aufnahme von Kindern ab Jahrgangsstufe 7. Dabei werden die folgenden Kriterien angewendet 1) Härtefälle 2) die Auswahlkriterien der Schule 3) den Losentscheid. Die Auswahlkriterien der Schule beinhalten eine Durchschnittsnote des Kindes aus den Halbjahren 2 der 5. Klasse und Halbjahr 1 der 6. Klasse (Durchschnittsnoten). Um eine Auswahl der Schule zu treffen muss der Notenschnitt der Schule bekannt sein, damit man weiß ob die Schule für die Schülerin/den Schüler realistisch ist. Diese Seite versucht die bekannten Noten abzubilden.
 
-
+```{r, warning=FALSE, message=FALSE, echo=FALSE}
+library(tidyverse)
+library(httr)
+library(sf)
+library(leaflet)
+library(htmltools)
 
 # Read in data ------------------------------------------------------------
 
@@ -42,8 +51,8 @@ df <- schulen %>%
 
 pal <- colorFactor(c('black', 'darkred', 'darkgreen'),
                    domain =c("note-vorhanden", "ohne-note", "keine-daten"))
-legende <- tags$div(
-  HTML('<b>Warnhinweise:</b><br>
+legende <- htmltools::tags$div(
+  htmltools::HTML('<b>Warnhinweise:</b><br>
   Es kann keine Haftung übernommen werden. Bitte alle Daten kontrollieren!<br>
   <b>Datenquelle:</b> <br>
        Lichtenberg: <a href="https://fragdenstaat.de/a/297001">Schulamt über Fragdenstaat.de</a><br>
@@ -65,4 +74,7 @@ leaflet() %>%
     label = paste("Schule:", df$name, "- Note:", df$note)
   ) %>%
   addControl(legende, position = "bottomleft")
+
+
+```
 

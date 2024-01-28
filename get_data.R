@@ -1,6 +1,43 @@
 library(tidyverse)
+library(httr)
+library(sf)
 
 
+# Get map data ------------------------------------------------------------
+
+# Following https://github.com/patperu/fisbroker_data
+
+# Helper functions
+get_X_Y_coordinates <- function(x) {
+  sftype <- as.character(sf::st_geometry_type(x, by_geometry = FALSE))
+  if(sftype == "POINT") {
+    xy <- as.data.frame(sf::st_coordinates(x))
+    dplyr::bind_cols(x, xy)
+  } else {
+    x
+  }
+}
+
+# get map data function
+get_school_mapdata <- function(url = "https://fbinter.stadt-berlin.de/fb/wfs/data/senstadt/s_schulen") {
+  typenames <- basename(url)
+  url <- httr::parse_url(url)
+  url$query <- list(service = "wfs",
+                    version = "2.0.0",
+                    request = "GetFeature",
+                    srsName = "EPSG:25833",
+                    TYPENAMES = typenames)
+  request <- httr::build_url(url)
+  out <- sf::read_sf(request)
+  out <- sf::st_transform(out, 4326)
+  out <- get_X_Y_coordinates(out)
+  out <- out %>% select(-fax, -email, -telefon)
+  return(out)
+}
+
+
+
+# Lichtenberg -------------------------------------------------------------
 get_school_grades_lichtenberg <- function(){
 url <- "https://fragdenstaat.de/anfrage/durchschnittsnote-als-aufnahmekriterium-fuer-weiterfuehrende-schulen-in-lichtenberg/866253/anhang/bersichtaufnahmeinfoaneltern.xlsx"
 
@@ -19,6 +56,10 @@ data <- rio::import("bersichtaufnahmeinfoaneltern.xlsx", skip = 1) %>%
   mutate(name = str_replace(name, "11K14", "14. Schule"))
 
 }
+
+
+
+# Pankow ------------------------------------------------------------------
 
 get_school_grades_pankow <- function(){
 
