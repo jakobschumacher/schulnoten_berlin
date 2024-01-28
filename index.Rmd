@@ -1,9 +1,20 @@
 ---
 title: "Schulnoten in Berlin 2023 (Pankow, Lichtenberg)"
 ---
-Die Sekundarschulen in Berlin (Gymnasium, Integrierte Sekundarschule, Gemeinschaftsschule) haben Aufnahmekritierien für die Aufnahme von Kindern ab Jahrgangsstufe 7. Dabei werden die folgenden Kriterien angewendet 1) Härtefälle 2) die Auswahlkriterien der Schule 3) den Losentscheid. Die Auswahlkriterien der Schule beinhalten eine Durchschnittsnote des Kindes aus den Halbjahren 2 der 5. Klasse und Halbjahr 1 der 6. Klasse (Durchschnittsnoten). Um eine Auswahl der Schule zu treffen muss der Notenschnitt der Schule bekannt sein, damit man weiß ob die Schule für die Schülerin/den Schüler realistisch ist. Diese Seite versucht die bekannten Noten abzubilden.
+<style type="text/css">
+.main-container {
+  max-width: 1800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
 
-```{r, warning=FALSE, message=FALSE, echo=FALSE}
+Die Sekundarschulen in Berlin (Gymnasium, Integrierte Sekundarschule, Gemeinschaftsschule) haben Aufnahmekritierien für die Aufnahme von Kindern ab Jahrgangsstufe 7. Dabei werden die folgenden Kriterien angewendet 1) Härtefälle 2) die Auswahlkriterien der Schule 3) den Losentscheid. Die Auswahlkriterien der Schule beinhalten eine Durchschnittsnote des Kindes aus den Halbjahren 2 der 5. Klasse und Halbjahr 1 der 6. Klasse (Durchschnittsnoten). Um eine Auswahl der Schule zu treffen muss der Notenschnitt der Schule bekannt sein, damit man weiß ob die Schule für die Schülerin/den Schüler realistisch ist. Diese Seite versucht die  Noten auf einer Karte darzustellen, die über Fragdenstaat.de von den Schulämtern bereit gestellt wurden.
+
+
+
+
+```{r, warning=FALSE, message=FALSE, echo=FALSE, fig.width=19, fig.height=9}
 library(tidyverse)
 library(httr)
 library(sf)
