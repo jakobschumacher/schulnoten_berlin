@@ -2,10 +2,92 @@
 title: "Schulnoten in Berlin 2023 (Pankow, Lichtenberg)"
 ---
 <style type="text/css">
+/* Base styles */
 .main-container {
-  max-width: 1800px;
+  max-width: 1400px;
   margin-left: auto;
   margin-right: auto;
+  padding: 0 15px;
+}
+
+body {
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+h1 {
+  font-size: 2em;
+  margin-bottom: 0.5em;
+}
+
+/* Make leaflet map responsive */
+.leaflet-container {
+  width: 100% !important;
+  height: 600px !important;
+}
+
+/* Responsive text */
+p {
+  text-align: justify;
+  margin-bottom: 1em;
+}
+
+/* Tablet screens */
+@media (max-width: 1024px) {
+  .main-container {
+    max-width: 100%;
+    padding: 0 10px;
+  }
+
+  body {
+    font-size: 15px;
+  }
+
+  h1 {
+    font-size: 1.75em;
+  }
+
+  .leaflet-container {
+    height: 500px !important;
+  }
+}
+
+/* Mobile screens */
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+  }
+
+  h1 {
+    font-size: 1.5em;
+  }
+
+  .leaflet-container {
+    height: 400px !important;
+  }
+
+  p {
+    text-align: left;
+  }
+}
+
+/* Small mobile screens */
+@media (max-width: 480px) {
+  .main-container {
+    padding: 0 5px;
+  }
+
+  body {
+    font-size: 13px;
+  }
+
+  h1 {
+    font-size: 1.3em;
+  }
+
+  .leaflet-container {
+    height: 350px !important;
+  }
 }
 </style>
 
@@ -14,7 +96,7 @@ Die Sekundarschulen in Berlin (Gymnasium, Integrierte Sekundarschule, Gemeinscha
 
 
 
-```{r, warning=FALSE, message=FALSE, echo=FALSE, fig.width=19, fig.height=9}
+```{r, warning=FALSE, message=FALSE, echo=FALSE, out.width="100%"}
 library(tidyverse)
 library(httr)
 library(sf)
@@ -63,6 +145,7 @@ df <- schulen %>%
 pal <- colorFactor(c('black', 'darkred', 'darkgreen'),
                    domain =c("note-vorhanden", "ohne-note", "keine-daten"))
 legende <- htmltools::tags$div(
+  style = "padding: 10px; background: white; border-radius: 5px; font-size: 12px; max-width: 250px; box-shadow: 0 0 15px rgba(0,0,0,0.2);",
   htmltools::HTML('<b>Warnhinweise:</b><br>
   Es kann keine Haftung übernommen werden. Bitte alle Daten kontrollieren!<br>
   <b>Datenquelle:</b> <br>
@@ -74,7 +157,11 @@ legende <- htmltools::tags$div(
 
 # Start leaflet -----------------------------------------------------------
 
-leaflet() %>%
+leaflet(options = leafletOptions(
+  zoomControl = TRUE,
+  attributionControl = TRUE,
+  preferCanvas = TRUE
+)) %>%
   addTiles() %>%
   setView(lng = 13.48, lat = 52.56, zoom = 12) %>%
   addCircleMarkers(
@@ -82,7 +169,11 @@ leaflet() %>%
     lat = df$lat,
     color = pal(df$gruppe),
     radius = 8,
-    label = paste("Schule:", df$name, "- Note:", df$note)
+    label = paste("Schule:", df$name, "- Note:", df$note),
+    labelOptions = labelOptions(
+      style = list("font-size" = "14px"),
+      direction = "auto"
+    )
   ) %>%
   addControl(legende, position = "bottomleft")
 

@@ -58,6 +58,46 @@ data <- rio::import("bersichtaufnahmeinfoaneltern.xlsx", skip = 1) %>%
 }
 
 
+# Lichtenberg 2025 --------------------------------------------------------
+get_school_grades_lichtenberg_2025 <- function(){
+
+  # Data from PDF: 2025lichtenberg.pdf
+  # Admission data for school year 2025/2026
+
+  lichtenberg_2025 <- c(
+    "11K01", "Alexander-Puschkin-Schule", 2.0,
+    "11K02", "Mildred-Harnack-Schule", 2.4,
+    "11K04", "Gutenberg-Schule", 1.5,
+    "11K05", "Fritz-Reuter-Schule", 2.2,
+    "11K06", "Schule am Rathaus", "ohne Note",
+    "11K07", "Vincent-van-Gogh-Schule", "ohne Note",
+    "11K08", "Schule am Tierpark", "ohne Note",
+    "11K09", "Philipp-Reis-Schule", "ohne Note",
+    "11K10", "Grüner Campus Malchow", "ohne Note",
+    "11K11", "Paul-Schmidt-Schule", "ohne Note",
+    "11K12", "Paul-und-Charlotte-Kniese-Schule", "ohne Note",
+    "11K13", "13. Schule", "ohne Note",
+    "11K14", "14. Schule", "ohne Note",
+    "11K15", "May-Ayim-Schule", 2.2,
+    "11K16", "Sekundarschule Falkenberger Chaussee", "ohne Note",
+    "11Y02", "Johann-Gottfried-Herder-Gymnasium", 1.4,
+    "11Y05", "Hans-und-Hilde-Coppi-Gymnasium", "ohne Note",
+    "11Y09", "Barnim-Gymnasium", 1.4,
+    "11Y10", "Manfred-von-Ardenne-Gymnasium", "ohne Note",
+    "11Y11", "Immanuel-Kant-Gymnasium", 1.2,
+    "11Y12", "Gymnasium Allee der Kosmonauten", "ohne Note"
+  )
+
+  # Change to tibble
+  matrix(lichtenberg_2025, nrow = 21, ncol = 3, byrow = T) %>%
+    as_tibble() %>%
+    rename("schul_nr" = "V1", "name" = "V2", "note" = "V3") %>%
+    mutate(name = str_remove(name, pattern = "-Gymnasium")) %>%
+    mutate(name = str_remove(name, pattern = "-Schule")) %>%
+    mutate(schuljahr = "2025")
+
+}
+
 
 # Pankow ------------------------------------------------------------------
 
