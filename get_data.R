@@ -19,19 +19,35 @@ get_X_Y_coordinates <- function(x) {
 }
 
 # get map data function
-get_school_mapdata <- function(url = "https://fbinter.stadt-berlin.de/fb/wfs/data/senstadt/s_schulen") {
-  typenames <- basename(url)
-  url <- httr::parse_url(url)
-  url$query <- list(service = "wfs",
-                    version = "2.0.0",
-                    request = "GetFeature",
-                    srsName = "EPSG:25833",
-                    TYPENAMES = typenames)
-  request <- httr::build_url(url)
+get_school_mapdata <- function(url = "https://gdi.berlin.de/services/wfs/schulen") {
+  # Build WFS request URL
+  request_url <- httr::parse_url(url)
+  request_url$query <- list(
+    service = "WFS",
+    version = "1.1.0",
+    request = "GetFeature",
+    typeName = "schulen:schulen",
+    outputFormat = "json",
+    srsName = "EPSG:4326"
+  )
+  request <- httr::build_url(request_url)
+
+  # Read spatial data
   out <- sf::read_sf(request)
-  out <- sf::st_transform(out, 4326)
+
+  # Extract coordinates
   out <- get_X_Y_coordinates(out)
-  out <- out %>% select(-fax, -email, -telefon)
+
+  # Clean up columns - keep only relevant columns
+  cols_to_keep <- c("bsn", "schulname", "schulart", "bezirk", "email", "internet", "geometry", "X", "Y")
+  existing_cols <- intersect(cols_to_keep, names(out))
+  out <- out %>% select(all_of(existing_cols))
+
+  # Rename columns to match old format
+  if ("schulname" %in% names(out)) out <- out %>% rename(name = schulname)
+  if ("schulart" %in% names(out)) out <- out %>% rename(schultyp = schulart)
+  if ("internet" %in% names(out)) out <- out %>% rename(website = internet)
+
   return(out)
 }
 

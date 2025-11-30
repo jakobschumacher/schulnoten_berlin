@@ -1,5 +1,5 @@
 ---
-title: "Schulnoten in Berlin 2023 (Pankow, Lichtenberg)"
+title: "Schulnoten in Pankow und Lichtenberg (2025)"
 ---
 <style type="text/css">
 /* Base styles */
@@ -106,11 +106,18 @@ library(htmltools)
 # Read in data ------------------------------------------------------------
 
 source("get_data.R")
-pankow <- get_school_grades_pankow() %>% rename(note_pankow = note)
+pankow <- get_school_grades_pankow() %>%
+  rename(note_pankow = note) %>%
+  mutate(schuljahr = "2023")
 
-lichtenberg <- get_school_grades_lichtenberg() %>%
-  filter(schuljahr == "2023") %>%
-  mutate(note = ifelse(is.na(note), "ohne Note", note))
+# Combine all Lichtenberg data (historical + 2025)
+lichtenberg_historical <- get_school_grades_lichtenberg() %>%
+  mutate(note = ifelse(is.na(note), "ohne Note", as.character(note)))
+
+lichtenberg_2025 <- get_school_grades_lichtenberg_2025()
+
+lichtenberg_all <- bind_rows(lichtenberg_historical, lichtenberg_2025) %>%
+  mutate(note = ifelse(is.na(note), "ohne Note", as.character(note)))
 
 schulen <- get_school_mapdata() %>%
   rename(lon = X, lat = Y) %>%
@@ -124,18 +131,37 @@ schulen <- get_school_mapdata() %>%
 
 # Join datasets -----------------------------------------------------------
 
+# First, aggregate multi-year data into formatted strings per school
+lichtenberg_summary <- lichtenberg_all %>%
+  arrange(name, schuljahr) %>%
+  group_by(name) %>%
+  summarise(
+    note_years = paste(schuljahr, ":", note, collapse = " | "),
+    latest_note = last(note),
+    .groups = "drop"
+  )
+
+pankow_summary <- pankow %>%
+  group_by(name) %>%
+  summarise(
+    note_years = paste(schuljahr, ":", note_pankow, collapse = " | "),
+    latest_note = note_pankow,
+    .groups = "drop"
+  )
+
 df <- schulen %>%
   filter(bezirk == "Pankow" | bezirk == "Lichtenberg") %>%
-  select(name, schultyp, bezirk, lon, lat) %>%
-  full_join(lichtenberg, by = join_by(name)) %>%
-  rename(note_lichtenberg = note) %>%
-  full_join(pankow, by = join_by(name)) %>%
-  mutate(note = ifelse(bezirk == "Pankow", note_pankow, NA))  %>%
-  mutate(note = ifelse(bezirk == "Lichtenberg", note_lichtenberg, note)) %>%
+  select(name, schultyp, bezirk, website, lon, lat) %>%
+  left_join(lichtenberg_summary, by = join_by(name)) %>%
+  rename(note_years_lichtenberg = note_years, latest_note_lichtenberg = latest_note) %>%
+  left_join(pankow_summary, by = join_by(name)) %>%
+  rename(note_years_pankow = note_years, latest_note_pankow = latest_note) %>%
+  mutate(note_years = ifelse(bezirk == "Pankow", note_years_pankow, note_years_lichtenberg)) %>%
+  mutate(latest_note = ifelse(bezirk == "Pankow", latest_note_pankow, latest_note_lichtenberg)) %>%
   mutate(gruppe = "note-vorhanden") %>%
-  mutate(gruppe = ifelse(note=="ohne Note", "ohne-note", gruppe)) %>%
-  mutate(gruppe = ifelse(is.na(note), "keine-daten", gruppe)) %>%
-  mutate(note = ifelse(is.na(note), "keine daten", note))
+  mutate(gruppe = ifelse(latest_note == "ohne Note", "ohne-note", gruppe)) %>%
+  mutate(gruppe = ifelse(is.na(latest_note), "keine-daten", gruppe)) %>%
+  mutate(note_years = ifelse(is.na(note_years), "keine Daten", note_years))
 
 
 
@@ -157,6 +183,25 @@ legende <- htmltools::tags$div(
 
 # Start leaflet -----------------------------------------------------------
 
+# Create enhanced labels with HTML
+create_label <- function(name, website, note_years) {
+  label_parts <- c(paste0("<b>", name, "</b>"))
+
+  if (!is.na(website) && website != "") {
+    label_parts <- c(label_parts, paste0('<a href="', website, '" target="_blank">Website</a>'))
+  }
+
+  label_parts <- c(label_parts, paste0("Noten: ", note_years))
+
+  htmltools::HTML(paste(label_parts, collapse = "<br/>"))
+}
+
+# Apply labels to each school
+df <- df %>%
+  rowwise() %>%
+  mutate(popup_label = list(create_label(name, website, note_years))) %>%
+  ungroup()
+
 leaflet(options = leafletOptions(
   zoomControl = TRUE,
   attributionControl = TRUE,
@@ -169,7 +214,8 @@ leaflet(options = leafletOptions(
     lat = df$lat,
     color = pal(df$gruppe),
     radius = 8,
-    label = paste("Schule:", df$name, "- Note:", df$note),
+    popup = df$popup_label,
+    label = df$name,
     labelOptions = labelOptions(
       style = list("font-size" = "14px"),
       direction = "auto"
