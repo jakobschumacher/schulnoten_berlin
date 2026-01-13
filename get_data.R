@@ -152,5 +152,62 @@ get_school_grades_pankow <- function(){
 
 }
 
+# Pankow 2024 ------------------------------------------------------------------
+get_school_grades_pankow_2024 <- function(){
+  
+  # Read CSV data from pankow_2024.pdf extraction
+  if (file.exists("pankow_2024_data.csv")) {
+    pankow_2024 <- read.csv("pankow_2024_data.csv", stringsAsFactors = FALSE) %>%
+      mutate(name = str_remove(name, "-Gymnasium"))  %>%
+      mutate(name = str_remove(name, "-Schule")) %>%
+      mutate(name = str_remove(name, "-GemS")) %>%
+      mutate(name = str_remove(name, " Engl\\.")) %>%
+      mutate(name = str_remove(name, " Franz\\.")) %>%
+      mutate(schuljahr = as.character(schuljahr))
+  } else {
+    # Fallback to manual data if CSV not found
+    pankow_2024 <- tibble(
+      schul_nr = c("03K01", "03K01", "03K02", "03K02", "03K03", "03K03", "03K04", "03K04", 
+                   "03K05", "03K05", "03K06", "03K06", "03K07", "03K07", "03K08", "03K08",
+                   "03K09", "03K09", "03K10", "03K10", "03K11", "03K11", "03Y03", "03Y03",
+                   "03Y04", "03Y04", "03Y05", "03Y05", "03Y06", "03Y06", "03Y10", "03Y10",
+                   "03Y13", "03Y13", "03Y14", "03Y14", "03Y15", "03Y15", "03Y16", "03Y16",
+                   "03Y17", "03Y17"),
+      name = c("Kurt-Schwitters-Schule", "Kurt-Schwitters-Schule", "Kurt-Tucholsky-Schule", 
+               "Kurt-Tucholsky-Schule", "Konrad-Duden-Schule", "Konrad-Duden-Schule",
+               "Gustave-Eiffel-Schule", "Gustave-Eiffel-Schule", "Heinz-Brandt-Schule",
+               "Heinz-Brandt-Schule", "Reinhold-Burger-Schule", "Reinhold-Burger-Schule",
+               "Tesla-Schule", "Tesla-Schule", "Hagenbeck-Schule", "Hagenbeck-Schule",
+               "Janusz-Korczak-Schule", "Janusz-Korczak-Schule", "Hufeland-Schule",
+               "Hufeland-Schule", "Wilhelm-von-Humboldt-Schule", "Wilhelm-von-Humboldt-Schule",
+               "Käthe-Kollwitz-Gymnasium", "Käthe-Kollwitz-Gymnasium", "Heinrich-Schliemann-Gymnasium",
+               "Heinrich-Schliemann-Gymnasium", "Carl-von-Ossietzky-Gymnasium",
+               "Carl-von-Ossietzky-Gymnasium", "Carl-von-Ossietzky-Gymnasium",
+               "Carl-von-Ossietzky-Gymnasium", "Rosa-Luxemburg-Gymnasium", "Rosa-Luxemburg-Gymnasium",
+               "Felix-Mendelssohn-Bartholdy-Gymnasium", "Felix-Mendelssohn-Bartholdy-Gymnasium",
+               "Primo-Levi-Gymnasium", "Primo-Levi-Gymnasium", "Max-Delbrück-Gymnasium",
+               "Max-Delbrück-Gymnasium", "Robert-Havemann-Gymnasium", "Robert-Havemann-Gymnasium",
+               "Inge-Deutschkron-Gymnasium", "Inge-Deutschkron-Gymnasium"),
+      schuljahr = c("2024", "2025", "2024", "2025", "2024", "2025", "2024", "2025",
+                   "2024", "2025", "2024", "2025", "2024", "2025", "2024", "2025",
+                   "2024", "2025", "2024", "2025", "2024", "2025", "2024", "2025",
+                   "2024", "2025", "2024", "2025", "2024", "2025", "2024", "2025",
+                   "2024", "2025", "2024", "2025", "2024", "2025", "2024", "2025",
+                   "2024", "2025"),
+      aufnahme_kriterium = c("1.5", "1.6", "1.8", "1.8", "2.4", "2.4", "alle", "alle",
+                            "1.6", "1.4", "2.4", "2.4", "alle (Losverfahren im ZW)",
+                            "alle (Losverfahren im ZW)", "2.4", "2.4", "alle (Losverfahren So-Päd)",
+                            "alle", "alle", "alle", "Losverfahren", "nur aus Primarstufe",
+                            "Notensumme 5", "Notensumme 5", "1.2", "Losverfahren bei 1.0",
+                            "1.0", "1.1", "**", "**", "Punktsumme 9", "Punktsumme 10",
+                            "1.3", "1.2", "alle (ZW bis 2.2)", "1.2", "1.5", "1.5",
+                            "alle", "alle", "alle", "alle")
+    )
+  }
+
+  return(pankow_2024)
+
+}
+
 
 

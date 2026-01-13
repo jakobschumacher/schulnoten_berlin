@@ -1,5 +1,5 @@
 ---
-title: "Schulnoten in Pankow und Lichtenberg (2025)"
+title: "Schulnoten in Pankow und Lichtenberg (2024/2025)"
 ---
 <style type="text/css">
 /* Base styles */
@@ -110,6 +110,12 @@ pankow <- get_school_grades_pankow() %>%
   rename(note_pankow = note) %>%
   mutate(schuljahr = "2023")
 
+# Add Pankow 2024 data
+pankow_2024 <- get_school_grades_pankow_2024() %>%
+  rename(note = aufnahme_kriterium) %>%
+  mutate(note = ifelse(note == "alle", "ohne Note", note)) %>%
+  mutate(note = ifelse(note == "**", "ohne Note", note))
+
 # Combine all Lichtenberg data (historical + 2025)
 lichtenberg_historical <- get_school_grades_lichtenberg() %>%
   mutate(note = ifelse(is.na(note), "ohne Note", as.character(note)))
@@ -141,11 +147,19 @@ lichtenberg_summary <- lichtenberg_all %>%
     .groups = "drop"
   )
 
-pankow_summary <- pankow %>%
+# Combine Pankow data (2023 + 2024)
+pankow_all <- bind_rows(
+  pankow %>% rename(note = note_pankow) %>% mutate(schuljahr = as.character(schuljahr)),
+  pankow_2024 %>% mutate(schuljahr = as.character(schuljahr))
+) %>% 
+  mutate(note = ifelse(is.na(note), "ohne Note", as.character(note)))
+
+pankow_summary <- pankow_all %>%
+  arrange(name, schuljahr) %>%
   group_by(name) %>%
   summarise(
-    note_years = paste(schuljahr, ":", note_pankow, collapse = " | "),
-    latest_note = note_pankow,
+    note_years = paste(schuljahr, ":", note, collapse = " | "),
+    latest_note = last(note),
     .groups = "drop"
   )
 
@@ -176,7 +190,8 @@ legende <- htmltools::tags$div(
   Es kann keine Haftung übernommen werden. Bitte alle Daten kontrollieren!<br>
   <b>Datenquelle:</b> <br>
        Lichtenberg: <a href="https://fragdenstaat.de/a/297001">Schulamt über Fragdenstaat.de</a><br>
-       Pankow: <a href="https://fragdenstaat.de/a/296999">Schulamt über Fragdenstaat.de</a>')
+       Pankow 2023: <a href="https://fragdenstaat.de/a/296999">Schulamt über Fragdenstaat.de</a><br>
+       Pankow 2024/25: PDF-Daten vom Schulamt Pankow (pankow_2024_data.csv)')
 )
 
 
