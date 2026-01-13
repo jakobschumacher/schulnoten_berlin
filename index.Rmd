@@ -1,106 +1,15 @@
 ---
-title: "Schulnoten in Pankow und Lichtenberg (2024/2025)"
+title: "Schulnoten in Pankow und Lichtenberg"
+html_document:
+    css: ["styles.css"] 
 ---
-<style type="text/css">
-/* Base styles */
-.main-container {
-  max-width: 1400px;
-  margin-left: auto;
-  margin-right: auto;
-  padding: 0 15px;
-}
-
-body {
-  font-size: 16px;
-  line-height: 1.6;
-}
-
-h1 {
-  font-size: 2em;
-  margin-bottom: 0.5em;
-}
-
-/* Make leaflet map responsive */
-.leaflet-container {
-  width: 100% !important;
-  height: 600px !important;
-}
-
-/* Responsive text */
-p {
-  text-align: justify;
-  margin-bottom: 1em;
-}
-
-/* Tablet screens */
-@media (max-width: 1024px) {
-  .main-container {
-    max-width: 100%;
-    padding: 0 10px;
-  }
-
-  body {
-    font-size: 15px;
-  }
-
-  h1 {
-    font-size: 1.75em;
-  }
-
-  .leaflet-container {
-    height: 500px !important;
-  }
-}
-
-/* Mobile screens */
-@media (max-width: 768px) {
-  body {
-    font-size: 14px;
-  }
-
-  h1 {
-    font-size: 1.5em;
-  }
-
-  .leaflet-container {
-    height: 400px !important;
-  }
-
-  p {
-    text-align: left;
-  }
-}
-
-/* Small mobile screens */
-@media (max-width: 480px) {
-  .main-container {
-    padding: 0 5px;
-  }
-
-  body {
-    font-size: 13px;
-  }
-
-  h1 {
-    font-size: 1.3em;
-  }
-
-  .leaflet-container {
-    height: 350px !important;
-  }
-}
-</style>
-
-Die Sekundarschulen in Berlin (Gymnasium, Integrierte Sekundarschule, Gemeinschaftsschule) haben Aufnahmekritierien für die Aufnahme von Kindern ab Jahrgangsstufe 7. Dabei werden die folgenden Kriterien angewendet 1) Härtefälle 2) die Auswahlkriterien der Schule 3) den Losentscheid. Die Auswahlkriterien der Schule beinhalten eine Durchschnittsnote des Kindes aus den Halbjahren 2 der 5. Klasse und Halbjahr 1 der 6. Klasse (Durchschnittsnoten). Um eine Auswahl der Schule zu treffen muss der Notenschnitt der Schule bekannt sein, damit man weiß ob die Schule für die Schülerin/den Schüler realistisch ist. Diese Seite versucht die  Noten auf einer Karte darzustellen, die über Fragdenstaat.de von den Schulämtern bereit gestellt wurden.
-
-
-
 
 ```{r, warning=FALSE, message=FALSE, echo=FALSE, out.width="100%"}
 library(tidyverse)
 library(httr)
 library(sf)
 library(leaflet)
+library(leaflet.extras)
 library(htmltools)
 
 # Read in data ------------------------------------------------------------
@@ -112,19 +21,27 @@ pankow <- get_school_grades_pankow() %>%
 
 # Add Pankow 2024 data
 pankow_2024 <- get_school_grades_pankow_2024() %>%
-  rename(note = aufnahme_kriterium) %>%
   mutate(note = ifelse(note == "alle", "ohne Note", note)) %>%
   mutate(note = ifelse(note == "**", "ohne Note", note))
 
 # Combine all Lichtenberg data (historical + 2025)
-lichtenberg_historical <- get_school_grades_lichtenberg() %>%
-  mutate(note = ifelse(is.na(note), "ohne Note", as.character(note)))
+# Combine all Lichtenberg data (historical + 2025)
+lichtenberg_historical <- tryCatch({
+  get_school_grades_lichtenberg() %>% 
+    mutate(note = ifelse(is.na(note), "ohne Note", as.character(note)))
+}, warning = function(w) {
+  message("No historical Lichtenberg data available, using 2025 data only")
+  tibble(name = character(), note = character(), schuljahr = character())
+}, error = function(e) {
+  message("Error loading historical Lichtenberg data:", e$message)
+  tibble(name = character(), note = character(), schuljahr = character())
+})
 
 lichtenberg_2025 <- get_school_grades_lichtenberg_2025()
 
-lichtenberg_all <- bind_rows(lichtenberg_historical, lichtenberg_2025) %>%
+# Combine data - this will work even if historical data is empty
+lichtenberg_all <- bind_rows(lichtenberg_historical, lichtenberg_2025) %>% 
   mutate(note = ifelse(is.na(note), "ohne Note", as.character(note)))
-
 schulen <- get_school_mapdata() %>%
   rename(lon = X, lat = Y) %>%
   filter(schultyp %in% c("Integrierte Sekundarschule", "Gymnasium")) %>%
@@ -184,15 +101,6 @@ df <- schulen %>%
 
 pal <- colorFactor(c('black', 'darkred', 'darkgreen'),
                    domain =c("note-vorhanden", "ohne-note", "keine-daten"))
-legende <- htmltools::tags$div(
-  style = "padding: 10px; background: white; border-radius: 5px; font-size: 12px; max-width: 250px; box-shadow: 0 0 15px rgba(0,0,0,0.2);",
-  htmltools::HTML('<b>Warnhinweise:</b><br>
-  Es kann keine Haftung übernommen werden. Bitte alle Daten kontrollieren!<br>
-  <b>Datenquelle:</b> <br>
-       Lichtenberg: <a href="https://fragdenstaat.de/a/297001">Schulamt über Fragdenstaat.de</a><br>
-       Pankow 2023: <a href="https://fragdenstaat.de/a/296999">Schulamt über Fragdenstaat.de</a><br>
-       Pankow 2024/25: PDF-Daten vom Schulamt Pankow (pankow_2024_data.csv)')
-)
 
 
 
@@ -217,27 +125,66 @@ df <- df %>%
   mutate(popup_label = list(create_label(name, website, note_years))) %>%
   ungroup()
 
-leaflet(options = leafletOptions(
-  zoomControl = TRUE,
-  attributionControl = TRUE,
-  preferCanvas = TRUE
-)) %>%
-  addTiles() %>%
-  setView(lng = 13.48, lat = 52.56, zoom = 12) %>%
-  addCircleMarkers(
-    lng = df$lon,
-    lat = df$lat,
-    color = pal(df$gruppe),
-    radius = 8,
-    popup = df$popup_label,
-    label = df$name,
-    labelOptions = labelOptions(
-      style = list("font-size" = "14px"),
-      direction = "auto"
-    )
-  ) %>%
-  addControl(legende, position = "bottomleft")
+# Output the map and legend separately
+# First, create and display the map
+map_output <- 
+  leaflet(options = leafletOptions(
+    zoomControl = TRUE,
+    attributionControl = TRUE,
+    preferCanvas = TRUE
+  )) %>%
+    addTiles() %>%
+    setView(lng = 13.48, lat = 52.56, zoom = 12) %>%
+    addCircleMarkers(
+      lng = df$lon,
+      lat = df$lat,
+      color = pal(df$gruppe),
+      radius = 8,
+      popup = df$popup_label,
+      label = df$name,
+      labelOptions = labelOptions(
+        style = list("font-size" = "14px"),
+        direction = "auto"
+      )
+    ) %>%
+    addFullscreenControl(pseudoFullscreen = TRUE, position = "topright")
+
+# Display the map
+map_output
 
 
 ```
 
+*In rot = Schulen mit Auswahl nach Noten. In Grün = Scholen ohne Noten. In schwarz = Keine Daten*
+
+## Ziel
+Diese Seite versucht die  Noten auf einer Karte darzustellen, die über Fragdenstaat.de von den Schulämtern bereit gestellt wurden. Weitere Informationen zu den Schulen siehe: [https://www.bildung.berlin.de/Schulverzeichnis/](https://www.bildung.berlin.de/Schulverzeichnis/)
+
+## Erläuterung
+Die Sekundarschulen in Berlin (Gymnasium, Integrierte Sekundarschule, Gemeinschaftsschule) haben Aufnahmekritierien für die Aufnahme von Kindern ab Jahrgangsstufe 7. 
+
+Dabei werden die folgenden Kriterien angewendet 
+
+1. Härtefälle 
+2. die Auswahlkriterien der Schule 
+3. den Losentscheid. 
+ 
+Die Auswahlkriterien der Schule beinhalten eine Durchschnittsnote des Kindes aus den Halbjahren 2 der 5. Klasse und Halbjahr 1 der 6. Klasse (Durchschnittsnoten). Um eine Auswahl der Schule zu treffen muss der Notenschnitt der Schule bekannt sein, damit man weiß ob die Schule für die Schülerin/den Schüler realistisch ist. 
+
+## Haftungsausschluss
+Es kann keine Haftung übernommen werden. Bitte alle Daten kontrollieren!<br>
+
+## Datenquelle
+* Lichtenberg 2023: <a href="https://fragdenstaat.de/a/297001">Schulamt über Fragdenstaat.de</a><br>
+* Lichtenberg 2025: <a href="https://fragdenstaat.de/a/352602">Schulamt über Fragdenstaat.de</a><br>
+* Pankow 2023: <a href="https://fragdenstaat.de/a/296999">Schulamt über Fragdenstaat.de</a><br>
+* Pankow 2024/25: <a href="https://fragdenstaat.de/a/354681">Schulamt über Fragdenstaat.de</a><br>
+
+## Unterstützen
+* Es fehlen die Daten aus Lichtenberg aus 2024. Wer mag gerne beim Schulamt Lichtenberg anfragen. Am besten per Fragdenstaat.de dann können die Noten von dort leicht übernommen werden.
+
+## Danksagung
+* Die Mitarbeitenden in den Ämtern
+* Die Softwareprojekte R, RMarkdown, Leaflet
+* Openstreetmap
+* Mistral AI 

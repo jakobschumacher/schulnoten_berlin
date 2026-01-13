@@ -1,0 +1,119 @@
+/* Base styles */
+.main-container {
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 15px;
+}
+
+body {
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+h1 {
+  font-size: 2em;
+  margin-bottom: 0.5em;
+}
+
+/* Make leaflet map responsive */
+.leaflet-container {
+  width: 100% !important;
+  height: 600px !important;
+}
+
+/* Responsive text */
+p {
+  text-align: justify;
+  margin-bottom: 1em;
+}
+
+/* Tablet screens */
+@media (max-width: 1024px) {
+  .main-container {
+    max-width: 100%;
+    padding: 0 10px;
+  }
+
+  body {
+    font-size: 15px;
+  }
+
+  h1 {
+    font-size: 1.75em;
+  }
+
+  .leaflet-container {
+    height: 500px !important;
+  }
+}
+
+/* Legend container - always below map */
+.legend-container {
+  width: 100%;
+  margin-top: 15px;
+  padding: 0 15px;
+}
+
+.legend-box {
+  padding: 15px;
+  background: white;
+  border-radius: 5px;
+  font-size: 14px;
+  max-width: 800px;
+  margin: 0 auto;
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+}
+
+/* Mobile screens */
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+  }
+
+  h1 {
+    font-size: 1.5em;
+  }
+
+  .leaflet-container {
+    height: 400px !important;
+  }
+
+  p {
+    text-align: left;
+  }
+
+  /* Make legend more compact on mobile */
+  .legend-box {
+    padding: 10px;
+    font-size: 12px;
+    max-width: 100%;
+  }
+}
+
+/* Small mobile screens */
+@media (max-width: 480px) {
+  .main-container {
+    padding: 0 5px;
+  }
+
+  body {
+    font-size: 13px;
+  }
+
+  h1 {
+    font-size: 1.3em;
+  }
+
+  .leaflet-container {
+    height: 350px !important;
+  }
+
+  /* Adjust legend for very small screens */
+  .legend-box {
+    padding: 8px;
+    font-size: 11px;
+  }
+}
+
+

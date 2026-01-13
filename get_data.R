@@ -1,6 +1,9 @@
 library(tidyverse)
 library(httr)
 library(sf)
+library(janitor)
+library(rio)
+library(stringr)
 
 
 # Get map data ------------------------------------------------------------
@@ -53,24 +56,36 @@ get_school_mapdata <- function(url = "https://gdi.berlin.de/services/wfs/schulen
 
 
 
+
 # Lichtenberg -------------------------------------------------------------
 get_school_grades_lichtenberg <- function(){
-url <- "https://fragdenstaat.de/anfrage/durchschnittsnote-als-aufnahmekriterium-fuer-weiterfuehrende-schulen-in-lichtenberg/866253/anhang/bersichtaufnahmeinfoaneltern.xlsx"
-
-data <- rio::import("bersichtaufnahmeinfoaneltern.xlsx", skip = 1) %>%
-  select(!starts_with("...")) %>%
-  janitor::clean_names() %>%
-  pivot_longer(cols = starts_with("sj_"), names_to = "schuljahr", values_to = "note") %>%
-  mutate(schuljahr = str_extract(schuljahr, "\\d{4}")) %>%
-  mutate(note = str_extract(note, "\\d,\\d")) %>%
-  mutate(note = as.numeric(str_replace(note, ",", "."))) %>%
-  rename("name" = "schulname") %>%
-  mutate(name = str_remove(name, pattern ="-Oberschule"))  %>%
-  mutate(name = str_remove(name, pattern ="-Schule")) %>%
-  mutate(name = str_replace(name, "Schule am Tierpark", "Schule-am-Tierpark")) %>%
-  mutate(name = str_replace(name, "11K13", "13. Schule")) %>%
-  mutate(name = str_replace(name, "11K14", "14. Schule"))
-
+  # This function previously loaded historical Lichtenberg data from an Excel file
+  # Since we're consolidating to CSV-only data handling, this function now returns
+  # an empty data frame with the correct structure
+  
+  # Check if the Excel file exists (for backward compatibility)
+  if (file.exists("data/bersichtaufnahmeinfoaneltern.xlsx")) {
+    data <- rio::import("data/bersichtaufnahmeinfoaneltern.xlsx", skip = 1) %>% 
+      select(!starts_with("...")) %>% 
+      janitor::clean_names() %>% 
+      pivot_longer(cols = starts_with("sj_"), names_to = "schuljahr", values_to = "note") %>% 
+      mutate(schuljahr = str_extract(schuljahr, "\\\\d{4}")) %>% 
+      mutate(note = str_extract(note, "\\\\d,\d")) %>% 
+      mutate(note = as.numeric(str_replace(note, ",", "."))) %>% 
+      rename("name" = "schulname") %>% 
+      mutate(name = str_remove(name, pattern ="-Oberschule"))  %>% 
+      mutate(name = str_remove(name, pattern ="-Schule")) %>% 
+      mutate(name = str_replace(name, "Schule am Tierpark", "Schule-am-Tierpark")) %>% 
+      mutate(name = str_replace(name, "11K13", "13. Schule")) %>% 
+      mutate(name = str_replace(name, "11K14", "14. Schule"))
+  } else {
+    # Return empty data frame with correct structure
+    # This maintains compatibility while avoiding hardcoded data
+    data <- tibble(name = character(), note = numeric(), schuljahr = character())
+    warning("Historical Lichtenberg data not available. Using 2025 data only.")
+  }
+  
+  return(data)
 }
 
 
@@ -79,37 +94,16 @@ get_school_grades_lichtenberg_2025 <- function(){
 
   # Data from PDF: 2025lichtenberg.pdf
   # Admission data for school year 2025/2026
+  # Now reading from CSV file instead of hardcoded values
 
-  lichtenberg_2025 <- c(
-    "11K01", "Alexander-Puschkin-Schule", 2.0,
-    "11K02", "Mildred-Harnack-Schule", 2.4,
-    "11K04", "Gutenberg-Schule", 1.5,
-    "11K05", "Fritz-Reuter-Schule", 2.2,
-    "11K06", "Schule am Rathaus", "ohne Note",
-    "11K07", "Vincent-van-Gogh-Schule", "ohne Note",
-    "11K08", "Schule am Tierpark", "ohne Note",
-    "11K09", "Philipp-Reis-Schule", "ohne Note",
-    "11K10", "Grüner Campus Malchow", "ohne Note",
-    "11K11", "Paul-Schmidt-Schule", "ohne Note",
-    "11K12", "Paul-und-Charlotte-Kniese-Schule", "ohne Note",
-    "11K13", "13. Schule", "ohne Note",
-    "11K14", "14. Schule", "ohne Note",
-    "11K15", "May-Ayim-Schule", 2.2,
-    "11K16", "Sekundarschule Falkenberger Chaussee", "ohne Note",
-    "11Y02", "Johann-Gottfried-Herder-Gymnasium", 1.4,
-    "11Y05", "Hans-und-Hilde-Coppi-Gymnasium", "ohne Note",
-    "11Y09", "Barnim-Gymnasium", 1.4,
-    "11Y10", "Manfred-von-Ardenne-Gymnasium", "ohne Note",
-    "11Y11", "Immanuel-Kant-Gymnasium", 1.2,
-    "11Y12", "Gymnasium Allee der Kosmonauten", "ohne Note"
-  )
+  # Read from CSV file
+  if (!file.exists("data/lichtenberg_2025_data.csv")) {
+    stop("Required data file 'data/lichtenberg_2025_data.csv' not found. Please ensure the data file is present.")
+  }
 
-  # Change to tibble
-  matrix(lichtenberg_2025, nrow = 21, ncol = 3, byrow = T) %>%
-    as_tibble() %>%
-    rename("schul_nr" = "V1", "name" = "V2", "note" = "V3") %>%
-    mutate(name = str_remove(name, pattern = "-Gymnasium")) %>%
-    mutate(name = str_remove(name, pattern = "-Schule")) %>%
+  read.csv("data/lichtenberg_2025_data.csv", stringsAsFactors = FALSE) %>% 
+    mutate(name = str_remove(name, pattern = "-Gymnasium")) %>% 
+    mutate(name = str_remove(name, pattern = "-Schule")) %>% 
     mutate(schuljahr = "2025")
 
 }
@@ -155,55 +149,26 @@ get_school_grades_pankow <- function(){
 # Pankow 2024 ------------------------------------------------------------------
 get_school_grades_pankow_2024 <- function(){
   
+# Pankow 2024 ------------------------------------------------------------------
+get_school_grades_pankow_2024 <- function(){
+  
   # Read CSV data from pankow_2024.pdf extraction
-  if (file.exists("pankow_2024_data.csv")) {
-    pankow_2024 <- read.csv("pankow_2024_data.csv", stringsAsFactors = FALSE) %>%
-      mutate(name = str_remove(name, "-Gymnasium"))  %>%
-      mutate(name = str_remove(name, "-Schule")) %>%
-      mutate(name = str_remove(name, "-GemS")) %>%
-      mutate(name = str_remove(name, " Engl\\.")) %>%
-      mutate(name = str_remove(name, " Franz\\.")) %>%
-      mutate(schuljahr = as.character(schuljahr))
-  } else {
-    # Fallback to manual data if CSV not found
-    pankow_2024 <- tibble(
-      schul_nr = c("03K01", "03K01", "03K02", "03K02", "03K03", "03K03", "03K04", "03K04", 
-                   "03K05", "03K05", "03K06", "03K06", "03K07", "03K07", "03K08", "03K08",
-                   "03K09", "03K09", "03K10", "03K10", "03K11", "03K11", "03Y03", "03Y03",
-                   "03Y04", "03Y04", "03Y05", "03Y05", "03Y06", "03Y06", "03Y10", "03Y10",
-                   "03Y13", "03Y13", "03Y14", "03Y14", "03Y15", "03Y15", "03Y16", "03Y16",
-                   "03Y17", "03Y17"),
-      name = c("Kurt-Schwitters-Schule", "Kurt-Schwitters-Schule", "Kurt-Tucholsky-Schule", 
-               "Kurt-Tucholsky-Schule", "Konrad-Duden-Schule", "Konrad-Duden-Schule",
-               "Gustave-Eiffel-Schule", "Gustave-Eiffel-Schule", "Heinz-Brandt-Schule",
-               "Heinz-Brandt-Schule", "Reinhold-Burger-Schule", "Reinhold-Burger-Schule",
-               "Tesla-Schule", "Tesla-Schule", "Hagenbeck-Schule", "Hagenbeck-Schule",
-               "Janusz-Korczak-Schule", "Janusz-Korczak-Schule", "Hufeland-Schule",
-               "Hufeland-Schule", "Wilhelm-von-Humboldt-Schule", "Wilhelm-von-Humboldt-Schule",
-               "Käthe-Kollwitz-Gymnasium", "Käthe-Kollwitz-Gymnasium", "Heinrich-Schliemann-Gymnasium",
-               "Heinrich-Schliemann-Gymnasium", "Carl-von-Ossietzky-Gymnasium",
-               "Carl-von-Ossietzky-Gymnasium", "Carl-von-Ossietzky-Gymnasium",
-               "Carl-von-Ossietzky-Gymnasium", "Rosa-Luxemburg-Gymnasium", "Rosa-Luxemburg-Gymnasium",
-               "Felix-Mendelssohn-Bartholdy-Gymnasium", "Felix-Mendelssohn-Bartholdy-Gymnasium",
-               "Primo-Levi-Gymnasium", "Primo-Levi-Gymnasium", "Max-Delbrück-Gymnasium",
-               "Max-Delbrück-Gymnasium", "Robert-Havemann-Gymnasium", "Robert-Havemann-Gymnasium",
-               "Inge-Deutschkron-Gymnasium", "Inge-Deutschkron-Gymnasium"),
-      schuljahr = c("2024", "2025", "2024", "2025", "2024", "2025", "2024", "2025",
-                   "2024", "2025", "2024", "2025", "2024", "2025", "2024", "2025",
-                   "2024", "2025", "2024", "2025", "2024", "2025", "2024", "2025",
-                   "2024", "2025", "2024", "2025", "2024", "2025", "2024", "2025",
-                   "2024", "2025", "2024", "2025", "2024", "2025", "2024", "2025",
-                   "2024", "2025"),
-      aufnahme_kriterium = c("1.5", "1.6", "1.8", "1.8", "2.4", "2.4", "alle", "alle",
-                            "1.6", "1.4", "2.4", "2.4", "alle (Losverfahren im ZW)",
-                            "alle (Losverfahren im ZW)", "2.4", "2.4", "alle (Losverfahren So-Päd)",
-                            "alle", "alle", "alle", "Losverfahren", "nur aus Primarstufe",
-                            "Notensumme 5", "Notensumme 5", "1.2", "Losverfahren bei 1.0",
-                            "1.0", "1.1", "**", "**", "Punktsumme 9", "Punktsumme 10",
-                            "1.3", "1.2", "alle (ZW bis 2.2)", "1.2", "1.5", "1.5",
-                            "alle", "alle", "alle", "alle")
-    )
+  if (!file.exists("data/pankow_2024_data.csv")) {
+    stop("Required data file 'data/pankow_2024_data.csv' not found. Please ensure the data file is present.")
   }
+
+  pankow_2024 <- read.csv("data/pankow_2024_data.csv", stringsAsFactors = FALSE) %>% 
+    rename(note = aufnahme_kriterium) %>% 
+    mutate(name = str_remove(name, "-Gymnasium"))  %>% 
+    mutate(name = str_remove(name, "-Schule")) %>% 
+    mutate(name = str_remove(name, "-GemS")) %>% 
+    mutate(name = str_remove(name, " Engl\\.")) %>% 
+    mutate(name = str_remove(name, " Franz\\.")) %>% 
+    mutate(schuljahr = as.character(schuljahr))
+
+  return(pankow_2024)
+
+}
 
   return(pankow_2024)
 
@@ -211,3 +176,63 @@ get_school_grades_pankow_2024 <- function(){
 
 
 
+
+# Consolidated data loading function --------------------------------------------
+# This function provides a unified interface for loading all school data
+get_all_school_data <- function() {
+  
+  # Load map data (school locations)
+  map_data <- get_school_mapdata()
+  
+  # Load Pankow 2023 data
+  if (!file.exists("data/pankow_2023_data.csv")) {
+    stop("Required data file 'data/pankow_2023_data.csv' not found.")
+  }
+  pankow_2023 <- read.csv("data/pankow_2023_data.csv", stringsAsFactors = FALSE) %>%
+    mutate(bezirk = "Pankow", schuljahr = "2023")
+  
+  # Load Pankow 2024/2025 data
+  if (!file.exists("data/pankow_2024_data.csv")) {
+    stop("Required data file 'data/pankow_2024_data.csv' not found.")
+  }
+  pankow_2024_2025 <- get_school_grades_pankow_2024()  # Uses existing function
+  
+  # Load Lichtenberg 2025 data
+  if (!file.exists("data/lichtenberg_2025_data.csv")) {
+    stop("Required data file 'data/lichtenberg_2025_data.csv' not found.")
+  }
+  lichtenberg_2025 <- get_school_grades_lichtenberg_2025()  # Uses existing function
+  
+  # Combine all data
+  all_data <- bind_rows(
+    pankow_2023,
+    pankow_2024_2025,
+    lichtenberg_2025
+  )
+  
+  # Join with map data to add coordinates
+  if ("name" %in% names(map_data) && "name" %in% names(all_data)) {
+    all_data <- left_join(all_data, 
+                         map_data %>% select(name, lon = X, lat = Y, schultyp, website), 
+                         by = "name")
+  }
+  
+  return(all_data)
+}
+
+# Helper function to get data for a specific district and year
+get_school_data <- function(bezirk = NULL, schuljahr = NULL) {
+  all_data <- get_all_school_data()
+  
+  # Filter by district if specified
+  if (!is.null(bezirk)) {
+    all_data <- all_data %>% filter(bezirk == bezirk)
+  }
+  
+  # Filter by year if specified
+  if (!is.null(schuljahr)) {
+    all_data <- all_data %>% filter(schuljahr == schuljahr)
+  }
+  
+  return(all_data)
+}

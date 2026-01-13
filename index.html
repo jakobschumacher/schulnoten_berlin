@@ -11,7 +11,7 @@
 
 
 
-<title>Schulnoten in Pankow und Lichtenberg (2024/2025)</title>
+<title>Schulnoten in Pankow und Lichtenberg</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -4287,6 +4287,8 @@ function asArray(value) {
 
 },{}]},{},[13]);
 </script>
+<style type="text/css">.leaflet-control-fullscreen a{background:#fff url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAA0CAYAAACU7CiIAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAN1wAADdcBQiibeAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAACoSURBVFiF7ZZhDoAgCIWxdbF3suxkHM3+1FaOmNqyIr6fiHuJTyKklKgHQxcVF7rCKAUBiA5h5tCSR/T0iTakL9PWz05IZNEM3YSCt6BvCgFI2ps4Q9v3k9Ldgdrr8nrX9LYc7wwu5EIu9KCQT6rq+r8mVbV0ewBEIpqy8MzMsWR/8f+oxmES9u7olZPqLKQeYtqkWuy61V2xND/H3h35pNqMPTPYE1oAnZZStKN8jj8AAAAASUVORK5CYII=) no-repeat 0 0;background-size:26px 52px}.leaflet-touch .leaflet-control-fullscreen a{background-position:2px 2px}.leaflet-fullscreen-on .leaflet-control-fullscreen a{background-position:0 -26px}.leaflet-touch.leaflet-fullscreen-on .leaflet-control-fullscreen a{background-position:2px -24px}.leaflet-container:-webkit-full-screen{height:100%!important;width:100%!important}.leaflet-container.leaflet-fullscreen-on,.leaflet-pseudo-fullscreen{height:100%!important;width:100%!important}.leaflet-pseudo-fullscreen{left:0!important;position:fixed!important;top:0!important;z-index:99999}@media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi){.leaflet-control-fullscreen a{background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADQAAABoCAYAAAC+NNNnAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAbrwAAG68BXhqRHAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAEhSURBVHic7dpBDoIwFADRj/FiPRlwsh4NN5CoiVKg1Ukzb43ApKK1dliWJXpy+/cN1GYQnUF0BtEZRHcvPTCldGhKkXMefnm+TXcjZBBd8TP0rvQ9ffb1R5+xTXcjZBCdQXQG0Q2u+sAZRGcQnUF0p9cUrv4eanW97kbIIDqD6AyiO70ut7du1mrdbU93I2QQnWsKdAbRGURnEJ1BdAbRGURnEJ1BdAbRueeUziA695zSGURnEN3pT7lvUkpTRIw7h80556n2tauPUGFMRMS4HltV9f+HWs3RSnX3DBlEZxCdQXQt9pzOUfbFuh179Xovqo/QOp35eKNPmkx9mszl1hudWpx7T3fPkEF0BtG555TOIDr3nNIZRGcQnUF0BtE9AF5WX48h7QeZAAAAAElFTkSuQmCC)}}</style>
+<script>L.Control.Fullscreen=L.Control.extend({options:{position:"topleft",title:{false:"View Fullscreen",true:"Exit Fullscreen"}},onAdd:function(e){var l=L.DomUtil.create("div","leaflet-control-fullscreen leaflet-bar leaflet-control");return this.link=L.DomUtil.create("a","leaflet-control-fullscreen-button leaflet-bar-part",l),this.link.href="#",this._map=e,this._map.on("fullscreenchange",this._toggleTitle,this),this._toggleTitle(),L.DomEvent.on(this.link,"click",this._click,this),l},_click:function(e){L.DomEvent.stopPropagation(e),L.DomEvent.preventDefault(e),this._map.toggleFullscreen(this.options)},_toggleTitle:function(){this.link.title=this.options.title[this._map.isFullscreen()]}}),L.Map.include({isFullscreen:function(){return this._isFullscreen||!1},toggleFullscreen:function(e){var l=this.getContainer();this.isFullscreen()?e&&e.pseudoFullscreen?this._disablePseudoFullscreen(l):document.exitFullscreen?document.exitFullscreen():document.mozCancelFullScreen?document.mozCancelFullScreen():document.webkitCancelFullScreen?document.webkitCancelFullScreen():document.msExitFullscreen?document.msExitFullscreen():this._disablePseudoFullscreen(l):e&&e.pseudoFullscreen?this._enablePseudoFullscreen(l):l.requestFullscreen?l.requestFullscreen():l.mozRequestFullScreen?l.mozRequestFullScreen():l.webkitRequestFullscreen?l.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT):l.msRequestFullscreen?l.msRequestFullscreen():this._enablePseudoFullscreen(l)},_enablePseudoFullscreen:function(e){L.DomUtil.addClass(e,"leaflet-pseudo-fullscreen"),this._setFullscreen(!0),this.fire("fullscreenchange")},_disablePseudoFullscreen:function(e){L.DomUtil.removeClass(e,"leaflet-pseudo-fullscreen"),this._setFullscreen(!1),this.fire("fullscreenchange")},_setFullscreen:function(e){this._isFullscreen=e;var l=this.getContainer();e?L.DomUtil.addClass(l,"leaflet-fullscreen-on"):L.DomUtil.removeClass(l,"leaflet-fullscreen-on"),this.invalidateSize()},_onFullscreenChange:function(e){var l=document.fullscreenElement||document.mozFullScreenElement||document.webkitFullscreenElement||document.msFullscreenElement;l!==this.getContainer()||this._isFullscreen?l!==this.getContainer()&&this._isFullscreen&&(this._setFullscreen(!1),this.fire("fullscreenchange")):(this._setFullscreen(!0),this.fire("fullscreenchange"))}}),L.Map.mergeOptions({fullscreenControl:!1}),L.Map.addInitHook((function(){var e;if(this.options.fullscreenControl&&(this.fullscreenControl=new L.Control.Fullscreen(this.options.fullscreenControl),this.addControl(this.fullscreenControl)),"onfullscreenchange"in document?e="fullscreenchange":"onmozfullscreenchange"in document?e="mozfullscreenchange":"onwebkitfullscreenchange"in document?e="webkitfullscreenchange":"onmsfullscreenchange"in document&&(e="MSFullscreenChange"),e){var l=L.bind(this._onFullscreenChange,this);this.whenReady((function(){L.DomEvent.on(document,e,l)})),this.on("unload",(function(){L.DomEvent.off(document,e,l)}))}})),L.control.fullscreen=function(e){return new L.Control.Fullscreen(e)};</script>
 
 <style type="text/css">
 code{white-space: pre-wrap;}
@@ -4409,98 +4411,73 @@ display: none;
 
 
 
-<h1 class="title toc-ignore">Schulnoten in Pankow und Lichtenberg
-(2024/2025)</h1>
+<h1 class="title toc-ignore">Schulnoten in Pankow und Lichtenberg</h1>
 
 </div>
 
 
-<style type="text/css">
-
-.main-container {
-max-width: 1400px;
-margin-left: auto;
-margin-right: auto;
-padding: 0 15px;
-}
-body {
-font-size: 16px;
-line-height: 1.6;
-}
-h1 {
-font-size: 2em;
-margin-bottom: 0.5em;
-}
-
-.leaflet-container {
-width: 100% !important;
-height: 600px !important;
-}
-
-p {
-text-align: justify;
-margin-bottom: 1em;
-}
-
-@media (max-width: 1024px) {
-.main-container {
-max-width: 100%;
-padding: 0 10px;
-}
-body {
-font-size: 15px;
-}
-h1 {
-font-size: 1.75em;
-}
-.leaflet-container {
-height: 500px !important;
-}
-}
-
-@media (max-width: 768px) {
-body {
-font-size: 14px;
-}
-h1 {
-font-size: 1.5em;
-}
-.leaflet-container {
-height: 400px !important;
-}
-p {
-text-align: left;
-}
-}
-
-@media (max-width: 480px) {
-.main-container {
-padding: 0 5px;
-}
-body {
-font-size: 13px;
-}
-h1 {
-font-size: 1.3em;
-}
-.leaflet-container {
-height: 350px !important;
-}
-}
-</style>
+<div class="leaflet html-widget html-fill-item" id="htmlwidget-f8810f9faa87f184d582" style="width:100%;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-f8810f9faa87f184d582">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}},"preferCanvas":true,"zoomControl":true,"attributionControl":true,"fullscreenControl":{"position":"topright","pseudoFullscreen":true}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addCircleMarkers","args":[[52.53159585,52.5577362,52.58192938,52.54080204,52.55118377,52.56809598,52.55888422,52.56305952,52.63292395,52.55048164,52.57793215,52.55065724,52.56997539,52.54240383,52.5456103,52.54635939,52.56643073,52.56676388,52.53409226,52.55130979,52.58381839,52.61611368,52.58210713,52.54556517,52.50792517,52.51129504,52.53658302,52.57014764,52.51555383,52.56792596,52.49668465,52.53957291,52.5545657,52.52328475,52.56923093,52.52447739,52.52438752,52.56484196,52.52698384,52.49188012,52.56916654,52.54176101,52.50198795],[13.42822709,13.4233526,13.41757676,13.44862414,13.44176808,13.40218906,13.44749203,13.40768349,13.49299402,13.44656148,13.39853132,13.46241991,13.42353777,13.44140809,13.42330498,13.42399047,13.40051588,13.41956433,13.43246826,13.45425964,13.40211322,13.49277081,13.36410433,13.47600809,13.51559849,13.48152218,13.48439491,13.52090988,13.48059276,13.50686829,13.51502401,13.49577299,13.50417855,13.47280692,13.53097606,13.51200978,13.51201281,13.51185669,13.46705025,13.52323275,13.5493047,13.49306446,13.48941876],8,null,null,{"interactive":true,"className":"","stroke":true,"color":["#8B0000","#8B0000","#8B0000","#006400","#8B0000","#8B0000","#8B0000","#006400","#006400","#000000","#000000","#000000","#000000","#000000","#8B0000","#8B0000","#8B0000","#8B0000","#8B0000","#8B0000","#8B0000","#006400","#006400","#000000","#8B0000","#8B0000","#8B0000","#8B0000","#006400","#006400","#006400","#006400","#006400","#8B0000","#000000","#000000","#000000","#000000","#8B0000","#006400","#8B0000","#006400","#8B0000"],"weight":5,"opacity":0.5,"fill":true,"fillColor":["#8B0000","#8B0000","#8B0000","#006400","#8B0000","#8B0000","#8B0000","#006400","#006400","#000000","#000000","#000000","#000000","#000000","#8B0000","#8B0000","#8B0000","#8B0000","#8B0000","#8B0000","#8B0000","#006400","#006400","#000000","#8B0000","#8B0000","#8B0000","#8B0000","#006400","#006400","#006400","#006400","#006400","#8B0000","#000000","#000000","#000000","#000000","#8B0000","#006400","#8B0000","#006400","#8B0000"],"fillOpacity":0.2},null,null,["<b>Kurt-Schwitters<\/b><br/><a href=\"https://www.kurt-schwitters.schule\" target=\"_blank\">Website<\/a><br/>Noten: 2023 : 1.6 | 2024 : 1.5 | 2025 : 1.6","<b>Kurt-Tucholsky<\/b><br/><a href=\"https://www.kto-berlin.de\" target=\"_blank\">Website<\/a><br/>Noten: 2023 : 1.8 | 2024 : 1.8 | 2025 : 1.8","<b>Konrad-Duden<\/b><br/><a href=\"https://www.isskd.de\" target=\"_blank\">Website<\/a><br/>Noten: 2023 : 2.4 | 2024 : 2.4 | 2025 : 2.4","<b>Gustave-Eiffel<\/b><br/><a href=\"http://www.gustave-eiffel-schule.de/\" target=\"_blank\">Website<\/a><br/>Noten: 2023 : ohne Note | 2024 : ohne Note | 2025 : ohne Note","<b>Heinz-Brandt<\/b><br/><a href=\"https://heinz-brandt-schule.de\" target=\"_blank\">Website<\/a><br/>Noten: 2023 : 1.5 | 2024 : 1.6 | 2025 : 1.4","<b>Reinhold-Burger<\/b><br/><a href=\"https://www.reinhold-burger-schule.de\" target=\"_blank\">Website<\/a><br/>Noten: 2023 : 2.4 | 2024 : 2.4 | 2025 : 2.4","<b>Hagenbeck<\/b><br/><a href=\"http://www.hagenbeck-schule.de\" target=\"_blank\">Website<\/a><br/>Noten: 2023 : 2.5 | 2024 : 2.4 | 2025 : 2.4","<b>Janusz-Korczak<\/b><br/><a href=\"https://jks-pankow.de\" target=\"_blank\">Website<\/a><br/>Noten: 2023 : 2.7 | 2024 : alle (Losverfahren So-Päd) | 2025 : ohne Note","<b>Hufeland<\/b><br/><a href=\"https://www.hufelandschule.berlin\" target=\"_blank\">Website<\/a><br/>Noten: 2023 : ohne Note | 2024 : ohne Note | 2025 : ohne Note","<b>Katholische Theresienschule (Gymnasium)<\/b><br/><a href=\"http://www.Theresienschule.de\" target=\"_blank\">Website<\/a><br/>Noten: keine Daten","<b>Freie Schule Pankow<\/b><br/><a href=\"https://www.freie-schule-pankow.de\" target=\"_blank\">Website<\/a><br/>Noten: keine Daten","<b>Ting<\/b><br/><a href=\"https://ting-schule.de\" target=\"_blank\">Website<\/a><br/>Noten: keine Daten","<b>Berlin Bilingual School<\/b><br/><a href=\"https://www.berlin-bilingual-school.de\" target=\"_blank\">Website<\/a><br/>Noten: keine Daten","<b>PepperMont Freie Sekundarschule für ganzheitliches Lernen<\/b><br/><a href=\"https://www.pfefferwerk.de\" target=\"_blank\">Website<\/a><br/>Noten: keine Daten","<b>Käthe-Kollwitz<\/b><br/><a href=\"https://www.kaethe-kollwitz-gymnasium.de\" target=\"_blank\">Website<\/a><br/>Noten: 2023 : Punktsumme 5 | 2024 : Notensumme 5 | 2025 : Notensumme 5","<b>Heinrich-Schliemann<\/b><br/><a href=\"http://www.hsg-berlin.de\" target=\"_blank\">Website<\/a><br/>Noten: 2023 : 1.4 | 2024 : 1.2 | 2025 : Losverfahren bei 1.0","<b>Carl-von-Ossietzky<\/b><br/><a href=\"https://cvo.berlin\" target=\"_blank\">Website<\/a><br/>Noten: 2023 : 1","<b>Rosa-Luxemburg<\/b><br/><a href=\"https://www.rosa-luxemburg-gymnasium.de\" target=\"_blank\">Website<\/a><br/>Noten: 2023 : Punktsumme 10-8 | 2024 : Punktsumme 9 | 2025 : Punktsumme 10","<b>Felix-Mendelssohn-Bartholdy<\/b><br/><a href=\"http://www.fmbg-berlin.de\" target=\"_blank\">Website<\/a><br/>Noten: 2023 : 1.4 | 2024 : 1.3 | 2025 : 1.2","<b>Primo-Levi<\/b><br/><a href=\"http://www.plg-berlin.de\" target=\"_blank\">Website<\/a><br/>Noten: 2023 : 1.2 | 2024 : alle (ZW bis 2.2) | 2025 : 1.2","<b>Max-Delbrück<\/b><br/><a href=\"https://max-delbrueck-gymnasium.de\" target=\"_blank\">Website<\/a><br/>Noten: 2023 : 1.4 | 2024 : 1.5 | 2025 : 1.5","<b>Robert-Havemann<\/b><br/><a href=\"http://www.robert-havemann-gymnasium.de\" target=\"_blank\">Website<\/a><br/>Noten: 2023 : ohne Note | 2024 : ohne Note | 2025 : ohne Note","<b>Inge-Deutschkron<\/b><br/><a href=\"https://www.idg.berlin\" target=\"_blank\">Website<\/a><br/>Noten: 2024 : ohne Note | 2025 : ohne Note","<b>Schul- und Leistungssportzentrum Berlin (Sportforum)<\/b><br/><a href=\"http://www.slzb.de\" target=\"_blank\">Website<\/a><br/>Noten: keine Daten","<b>Alexander-Puschkin<\/b><br/><a href=\"http://www.puschkinschule.eu\" target=\"_blank\">Website<\/a><br/>Noten: 2018 : 2.9 | 2019 : 2.1 | 2020 : 2 | 2021 : 1.9 | 2022 : 2 | 2023 : 2 | 2025 : 2.0","<b>Mildred-Harnack<\/b><br/><a href=\"http://www.mildred-harnack-schule.de\" target=\"_blank\">Website<\/a><br/>Noten: 2018 : 2.4 | 2019 : 2.5 | 2020 : ohne Note | 2021 : 2.5 | 2022 : ohne Note | 2023 : 2.6 | 2025 : 2.4","<b>Gutenberg<\/b><br/><a href=\"http://www.gutenberg-os.de\" target=\"_blank\">Website<\/a><br/>Noten: 2018 : 1.7 | 2019 : 1.6 | 2020 : 1.7 | 2021 : 1.5 | 2022 : 1.5 | 2023 : 1.6 | 2025 : 1.5","<b>Fritz-Reuter<\/b><br/><a href=\"http://www.Fritz-Reuter-Oberschule.de\" target=\"_blank\">Website<\/a><br/>Noten: 2018 : 2.5 | 2019 : 2.4 | 2020 : 2.4 | 2021 : 2.1 | 2022 : 2.2 | 2023 : 2.2 | 2025 : 2.2","<b>Schule am Rathaus<\/b><br/><a href=\"https://schuleamrathaus.de\" target=\"_blank\">Website<\/a><br/>Noten: 2018 : 2.9 | 2019 : 3 | 2020 : 3 | 2021 : ohne Note | 2022 : ohne Note | 2023 : 2.8 | 2025 : ohne Note","<b>Vincent-van-Gogh<\/b><br/><a href=\"https://www.vincent-van-gogh-schule.de\" target=\"_blank\">Website<\/a><br/>Noten: 2018 : ohne Note | 2019 : ohne Note | 2020 : ohne Note | 2021 : ohne Note | 2022 : ohne Note | 2023 : ohne Note | 2025 : ohne Note","<b>Schule-am-Tierpark<\/b><br/>Noten: 2018 : ohne Note | 2019 : ohne Note | 2020 : ohne Note | 2021 : ohne Note | 2022 : ohne Note | 2023 : ohne Note","<b>Philipp-Reis<\/b><br/><a href=\"https://www.philipp-reis-oberschule.de\" target=\"_blank\">Website<\/a><br/>Noten: 2018 : ohne Note | 2019 : ohne Note | 2020 : ohne Note | 2021 : ohne Note | 2022 : ohne Note | 2023 : ohne Note | 2025 : ohne Note","<b>Paul-Schmidt<\/b><br/><a href=\"http://www.paul-schmidt-schule.de\" target=\"_blank\">Website<\/a><br/>Noten: 2018 : ohne Note | 2019 : ohne Note | 2020 : ohne Note | 2021 : ohne Note | 2022 : ohne Note | 2023 : ohne Note | 2025 : ohne Note","<b>May-Ayim<\/b><br/><a href=\"https://May-Ayim-Schule.de\" target=\"_blank\">Website<\/a><br/>Noten: 2025 : 2.2","<b>Elsa-Neumann<\/b><br/><a href=\"https://elsa-neumann-schule.de\" target=\"_blank\">Website<\/a><br/>Noten: keine Daten","<b>Kosmos<\/b><br/><a href=\"https://iss.adkosmos.eu\" target=\"_blank\">Website<\/a><br/>Noten: keine Daten","<b>12. Schule (Gymnasium)<\/b><br/><a href=\"https://gym.adkosmos.eu\" target=\"_blank\">Website<\/a><br/>Noten: keine Daten","<b>16. Schule<\/b><br/>Noten: keine Daten","<b>Johann-Gottfried-Herder<\/b><br/><a href=\"http://www.jgherder.de\" target=\"_blank\">Website<\/a><br/>Noten: 2018 : 1.4 | 2019 : 1.2 | 2020 : 1.3 | 2021 : 1.5 | 2022 : 1.2 | 2023 : 1 | 2025 : 1.4","<b>Hans-und-Hilde-Coppi<\/b><br/><a href=\"http://www.coppi-gym.de\" target=\"_blank\">Website<\/a><br/>Noten: 2018 : ohne Note | 2019 : ohne Note | 2020 : ohne Note | 2021 : ohne Note | 2022 : ohne Note | 2023 : ohne Note | 2025 : ohne Note","<b>Barnim<\/b><br/><a href=\"https://www.barnim-gymnasium.net\" target=\"_blank\">Website<\/a><br/>Noten: 2018 : 1.5 | 2019 : 1.7 | 2020 : 1.7 | 2021 : 1.6 | 2022 : 1.6 | 2023 : 1.6 | 2025 : 1.4","<b>Manfred-von-Ardenne<\/b><br/><a href=\"https://www.ardenne-gymnasium.de\" target=\"_blank\">Website<\/a><br/>Noten: 2018 : ohne Note | 2019 : ohne Note | 2020 : ohne Note | 2021 : ohne Note | 2022 : 1.9 | 2023 : ohne Note | 2025 : ohne Note","<b>Immanuel-Kant<\/b><br/><a href=\"http://www.kant-gymnasium.de\" target=\"_blank\">Website<\/a><br/>Noten: 2018 : ohne Note | 2019 : 1.6 | 2020 : 1.5 | 2021 : 1.2 | 2022 : 1 | 2023 : 1.1 | 2025 : 1.2"],null,["Kurt-Schwitters","Kurt-Tucholsky","Konrad-Duden","Gustave-Eiffel","Heinz-Brandt","Reinhold-Burger","Hagenbeck","Janusz-Korczak","Hufeland","Katholische Theresienschule (Gymnasium)","Freie Schule Pankow","Ting","Berlin Bilingual School","PepperMont Freie Sekundarschule für ganzheitliches Lernen","Käthe-Kollwitz","Heinrich-Schliemann","Carl-von-Ossietzky","Rosa-Luxemburg","Felix-Mendelssohn-Bartholdy","Primo-Levi","Max-Delbrück","Robert-Havemann","Inge-Deutschkron","Schul- und Leistungssportzentrum Berlin (Sportforum)","Alexander-Puschkin","Mildred-Harnack","Gutenberg","Fritz-Reuter","Schule am Rathaus","Vincent-van-Gogh","Schule-am-Tierpark","Philipp-Reis","Paul-Schmidt","May-Ayim","Elsa-Neumann","Kosmos","12. Schule (Gymnasium)","16. Schule","Johann-Gottfried-Herder","Hans-und-Hilde-Coppi","Barnim","Manfred-von-Ardenne","Immanuel-Kant"],{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"style":{"font-size":"14px"},"className":"","sticky":true},null]}],"setView":[[52.56,13.48],12,[]],"limits":{"lat":[52.49188012,52.63292395],"lng":[13.36410433,13.5493047]}},"evals":[],"jsHooks":[]}</script>
+<div id="ziel" class="section level2">
+<h2>Ziel</h2>
+<p>Diese Seite versucht die Noten auf einer Karte darzustellen, die über
+Fragdenstaat.de von den Schulämtern bereit gestellt wurden. Weitere
+Informationen zu den Schulen siehe: <a href="https://www.bildung.berlin.de/Schulverzeichnis/">https://www.bildung.berlin.de/Schulverzeichnis/</a></p>
+</div>
+<div id="erläuterung" class="section level2">
+<h2>Erläuterung</h2>
 <p>Die Sekundarschulen in Berlin (Gymnasium, Integrierte Sekundarschule,
 Gemeinschaftsschule) haben Aufnahmekritierien für die Aufnahme von
-Kindern ab Jahrgangsstufe 7. Dabei werden die folgenden Kriterien
-angewendet 1) Härtefälle 2) die Auswahlkriterien der Schule 3) den
-Losentscheid. Die Auswahlkriterien der Schule beinhalten eine
-Durchschnittsnote des Kindes aus den Halbjahren 2 der 5. Klasse und
-Halbjahr 1 der 6. Klasse (Durchschnittsnoten). Um eine Auswahl der
-Schule zu treffen muss der Notenschnitt der Schule bekannt sein, damit
-man weiß ob die Schule für die Schülerin/den Schüler realistisch ist.
-Diese Seite versucht die Noten auf einer Karte darzustellen, die über
-Fragdenstaat.de von den Schulämtern bereit gestellt wurden.</p>
-<div class="leaflet html-widget html-fill-item" id="htmlwidget-ad295066df361f3d1884" style="width:100%;height:480px;"></div>
-<script type="application/json" data-for="htmlwidget-ad295066df361f3d1884">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}},"preferCanvas":true,"zoomControl":true,"attributionControl":true},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addCircleMarkers","args":[[52.53159585,52.5577362,52.58192938,52.54080204,52.55118377,52.56809598,52.55888422,52.56305952,52.63292395,52.55048164,52.57793215,52.55065724,52.56997539,52.54240383,52.5456103,52.54635939,52.56643073,52.56676388,52.53409226,52.55130979,52.58381839,52.61611368,52.58210713,52.54556517,52.50792517,52.51129504,52.53658302,52.57014764,52.51555383,52.56792596,52.49668465,52.53957291,52.5545657,52.52328475,52.56923093,52.52447739,52.52438752,52.56484196,52.52698384,52.49188012,52.56916654,52.54176101,52.50198795],[13.42822709,13.4233526,13.41757676,13.44862414,13.44176808,13.40218906,13.44749203,13.40768349,13.49299402,13.44656148,13.39853132,13.46241991,13.42353777,13.44140809,13.42330498,13.42399047,13.40051588,13.41956433,13.43246826,13.45425964,13.40211322,13.49277081,13.36410433,13.47600809,13.51559849,13.48152218,13.48439491,13.52090988,13.48059276,13.50686829,13.51502401,13.49577299,13.50417855,13.47280692,13.53097606,13.51200978,13.51201281,13.51185669,13.46705025,13.52323275,13.5493047,13.49306446,13.48941876],8,null,null,{"interactive":true,"className":"","stroke":true,"color":["#8B0000","#8B0000","#8B0000","#006400","#8B0000","#8B0000","#8B0000","#006400","#006400","#000000","#000000","#000000","#000000","#000000","#8B0000","#8B0000","#8B0000","#8B0000","#8B0000","#8B0000","#8B0000","#006400","#006400","#000000","#8B0000","#8B0000","#8B0000","#8B0000","#006400","#006400","#006400","#006400","#006400","#8B0000","#000000","#000000","#000000","#000000","#8B0000","#006400","#8B0000","#006400","#8B0000"],"weight":5,"opacity":0.5,"fill":true,"fillColor":["#8B0000","#8B0000","#8B0000","#006400","#8B0000","#8B0000","#8B0000","#006400","#006400","#000000","#000000","#000000","#000000","#000000","#8B0000","#8B0000","#8B0000","#8B0000","#8B0000","#8B0000","#8B0000","#006400","#006400","#000000","#8B0000","#8B0000","#8B0000","#8B0000","#006400","#006400","#006400","#006400","#006400","#8B0000","#000000","#000000","#000000","#000000","#8B0000","#006400","#8B0000","#006400","#8B0000"],"fillOpacity":0.2},null,null,["<b>Kurt-Schwitters<\/b><br/><a href=\"https://www.kurt-schwitters.schule\" target=\"_blank\">Website<\/a><br/>Noten: 2023 : 1.6 | 2024 : 1.5 | 2025 : 1.6","<b>Kurt-Tucholsky<\/b><br/><a href=\"https://www.kto-berlin.de\" target=\"_blank\">Website<\/a><br/>Noten: 2023 : 1.8 | 2024 : 1.8 | 2025 : 1.8","<b>Konrad-Duden<\/b><br/><a href=\"https://www.isskd.de\" target=\"_blank\">Website<\/a><br/>Noten: 2023 : 2.4 | 2024 : 2.4 | 2025 : 2.4","<b>Gustave-Eiffel<\/b><br/><a href=\"http://www.gustave-eiffel-schule.de/\" target=\"_blank\">Website<\/a><br/>Noten: 2023 : ohne Note | 2024 : ohne Note | 2025 : ohne Note","<b>Heinz-Brandt<\/b><br/><a href=\"https://heinz-brandt-schule.de\" target=\"_blank\">Website<\/a><br/>Noten: 2023 : 1.5 | 2024 : 1.6 | 2025 : 1.4","<b>Reinhold-Burger<\/b><br/><a href=\"https://www.reinhold-burger-schule.de\" target=\"_blank\">Website<\/a><br/>Noten: 2023 : 2.4 | 2024 : 2.4 | 2025 : 2.4","<b>Hagenbeck<\/b><br/><a href=\"http://www.hagenbeck-schule.de\" target=\"_blank\">Website<\/a><br/>Noten: 2023 : 2.5 | 2024 : 2.4 | 2025 : 2.4","<b>Janusz-Korczak<\/b><br/><a href=\"https://jks-pankow.de\" target=\"_blank\">Website<\/a><br/>Noten: 2023 : 2.7 | 2024 : alle (Losverfahren So-Päd) | 2025 : ohne Note","<b>Hufeland<\/b><br/><a href=\"https://www.hufelandschule.berlin\" target=\"_blank\">Website<\/a><br/>Noten: 2023 : ohne Note | 2024 : ohne Note | 2025 : ohne Note","<b>Katholische Theresienschule (Gymnasium)<\/b><br/><a href=\"http://www.Theresienschule.de\" target=\"_blank\">Website<\/a><br/>Noten: keine Daten","<b>Freie Schule Pankow<\/b><br/><a href=\"https://www.freie-schule-pankow.de\" target=\"_blank\">Website<\/a><br/>Noten: keine Daten","<b>Ting<\/b><br/><a href=\"https://ting-schule.de\" target=\"_blank\">Website<\/a><br/>Noten: keine Daten","<b>Berlin Bilingual School<\/b><br/><a href=\"https://www.berlin-bilingual-school.de\" target=\"_blank\">Website<\/a><br/>Noten: keine Daten","<b>PepperMont Freie Sekundarschule für ganzheitliches Lernen<\/b><br/><a href=\"https://www.pfefferwerk.de\" target=\"_blank\">Website<\/a><br/>Noten: keine Daten","<b>Käthe-Kollwitz<\/b><br/><a href=\"https://www.kaethe-kollwitz-gymnasium.de\" target=\"_blank\">Website<\/a><br/>Noten: 2023 : Punktsumme 5 | 2024 : Notensumme 5 | 2025 : Notensumme 5","<b>Heinrich-Schliemann<\/b><br/><a href=\"http://www.hsg-berlin.de\" target=\"_blank\">Website<\/a><br/>Noten: 2023 : 1.4 | 2024 : 1.2 | 2025 : Losverfahren bei 1.0","<b>Carl-von-Ossietzky<\/b><br/><a href=\"https://cvo.berlin\" target=\"_blank\">Website<\/a><br/>Noten: 2023 : 1","<b>Rosa-Luxemburg<\/b><br/><a href=\"https://www.rosa-luxemburg-gymnasium.de\" target=\"_blank\">Website<\/a><br/>Noten: 2023 : Punktsumme 10-8 | 2024 : Punktsumme 9 | 2025 : Punktsumme 10","<b>Felix-Mendelssohn-Bartholdy<\/b><br/><a href=\"http://www.fmbg-berlin.de\" target=\"_blank\">Website<\/a><br/>Noten: 2023 : 1.4 | 2024 : 1.3 | 2025 : 1.2","<b>Primo-Levi<\/b><br/><a href=\"http://www.plg-berlin.de\" target=\"_blank\">Website<\/a><br/>Noten: 2023 : 1.2 | 2024 : alle (ZW bis 2.2) | 2025 : 1.2","<b>Max-Delbrück<\/b><br/><a href=\"https://max-delbrueck-gymnasium.de\" target=\"_blank\">Website<\/a><br/>Noten: 2023 : 1.4 | 2024 : 1.5 | 2025 : 1.5","<b>Robert-Havemann<\/b><br/><a href=\"http://www.robert-havemann-gymnasium.de\" target=\"_blank\">Website<\/a><br/>Noten: 2023 : ohne Note | 2024 : ohne Note | 2025 : ohne Note","<b>Inge-Deutschkron<\/b><br/><a href=\"https://www.idg.berlin\" target=\"_blank\">Website<\/a><br/>Noten: 2024 : ohne Note | 2025 : ohne Note","<b>Schul- und Leistungssportzentrum Berlin (Sportforum)<\/b><br/><a href=\"http://www.slzb.de\" target=\"_blank\">Website<\/a><br/>Noten: keine Daten","<b>Alexander-Puschkin<\/b><br/><a href=\"http://www.puschkinschule.eu\" target=\"_blank\">Website<\/a><br/>Noten: 2018 : 2.9 | 2019 : 2.1 | 2020 : 2 | 2021 : 1.9 | 2022 : 2 | 2023 : 2 | 2025 : 2","<b>Mildred-Harnack<\/b><br/><a href=\"http://www.mildred-harnack-schule.de\" target=\"_blank\">Website<\/a><br/>Noten: 2018 : 2.4 | 2019 : 2.5 | 2020 : ohne Note | 2021 : 2.5 | 2022 : ohne Note | 2023 : 2.6 | 2025 : 2.4","<b>Gutenberg<\/b><br/><a href=\"http://www.gutenberg-os.de\" target=\"_blank\">Website<\/a><br/>Noten: 2018 : 1.7 | 2019 : 1.6 | 2020 : 1.7 | 2021 : 1.5 | 2022 : 1.5 | 2023 : 1.6 | 2025 : 1.5","<b>Fritz-Reuter<\/b><br/><a href=\"http://www.Fritz-Reuter-Oberschule.de\" target=\"_blank\">Website<\/a><br/>Noten: 2018 : 2.5 | 2019 : 2.4 | 2020 : 2.4 | 2021 : 2.1 | 2022 : 2.2 | 2023 : 2.2 | 2025 : 2.2","<b>Schule am Rathaus<\/b><br/><a href=\"https://schuleamrathaus.de\" target=\"_blank\">Website<\/a><br/>Noten: 2018 : 2.9 | 2019 : 3 | 2020 : 3 | 2021 : ohne Note | 2022 : ohne Note | 2023 : 2.8 | 2025 : ohne Note","<b>Vincent-van-Gogh<\/b><br/><a href=\"https://www.vincent-van-gogh-schule.de\" target=\"_blank\">Website<\/a><br/>Noten: 2018 : ohne Note | 2019 : ohne Note | 2020 : ohne Note | 2021 : ohne Note | 2022 : ohne Note | 2023 : ohne Note | 2025 : ohne Note","<b>Schule-am-Tierpark<\/b><br/>Noten: 2018 : ohne Note | 2019 : ohne Note | 2020 : ohne Note | 2021 : ohne Note | 2022 : ohne Note | 2023 : ohne Note","<b>Philipp-Reis<\/b><br/><a href=\"https://www.philipp-reis-oberschule.de\" target=\"_blank\">Website<\/a><br/>Noten: 2018 : ohne Note | 2019 : ohne Note | 2020 : ohne Note | 2021 : ohne Note | 2022 : ohne Note | 2023 : ohne Note | 2025 : ohne Note","<b>Paul-Schmidt<\/b><br/><a href=\"http://www.paul-schmidt-schule.de\" target=\"_blank\">Website<\/a><br/>Noten: 2018 : ohne Note | 2019 : ohne Note | 2020 : ohne Note | 2021 : ohne Note | 2022 : ohne Note | 2023 : ohne Note | 2025 : ohne Note","<b>May-Ayim<\/b><br/><a href=\"https://May-Ayim-Schule.de\" target=\"_blank\">Website<\/a><br/>Noten: 2025 : 2.2","<b>Elsa-Neumann<\/b><br/><a href=\"https://elsa-neumann-schule.de\" target=\"_blank\">Website<\/a><br/>Noten: keine Daten","<b>Kosmos<\/b><br/><a href=\"https://iss.adkosmos.eu\" target=\"_blank\">Website<\/a><br/>Noten: keine Daten","<b>12. Schule (Gymnasium)<\/b><br/><a href=\"https://gym.adkosmos.eu\" target=\"_blank\">Website<\/a><br/>Noten: keine Daten","<b>16. Schule<\/b><br/>Noten: keine Daten","<b>Johann-Gottfried-Herder<\/b><br/><a href=\"http://www.jgherder.de\" target=\"_blank\">Website<\/a><br/>Noten: 2018 : 1.4 | 2019 : 1.2 | 2020 : 1.3 | 2021 : 1.5 | 2022 : 1.2 | 2023 : 1 | 2025 : 1.4","<b>Hans-und-Hilde-Coppi<\/b><br/><a href=\"http://www.coppi-gym.de\" target=\"_blank\">Website<\/a><br/>Noten: 2018 : ohne Note | 2019 : ohne Note | 2020 : ohne Note | 2021 : ohne Note | 2022 : ohne Note | 2023 : ohne Note | 2025 : ohne Note","<b>Barnim<\/b><br/><a href=\"https://www.barnim-gymnasium.net\" target=\"_blank\">Website<\/a><br/>Noten: 2018 : 1.5 | 2019 : 1.7 | 2020 : 1.7 | 2021 : 1.6 | 2022 : 1.6 | 2023 : 1.6 | 2025 : 1.4","<b>Manfred-von-Ardenne<\/b><br/><a href=\"https://www.ardenne-gymnasium.de\" target=\"_blank\">Website<\/a><br/>Noten: 2018 : ohne Note | 2019 : ohne Note | 2020 : ohne Note | 2021 : ohne Note | 2022 : 1.9 | 2023 : ohne Note | 2025 : ohne Note","<b>Immanuel-Kant<\/b><br/><a href=\"http://www.kant-gymnasium.de\" target=\"_blank\">Website<\/a><br/>Noten: 2018 : ohne Note | 2019 : 1.6 | 2020 : 1.5 | 2021 : 1.2 | 2022 : 1 | 2023 : 1.1 | 2025 : 1.2"],null,["Kurt-Schwitters","Kurt-Tucholsky","Konrad-Duden","Gustave-Eiffel","Heinz-Brandt","Reinhold-Burger","Hagenbeck","Janusz-Korczak","Hufeland","Katholische Theresienschule (Gymnasium)","Freie Schule Pankow","Ting","Berlin Bilingual School","PepperMont Freie Sekundarschule für ganzheitliches Lernen","Käthe-Kollwitz","Heinrich-Schliemann","Carl-von-Ossietzky","Rosa-Luxemburg","Felix-Mendelssohn-Bartholdy","Primo-Levi","Max-Delbrück","Robert-Havemann","Inge-Deutschkron","Schul- und Leistungssportzentrum Berlin (Sportforum)","Alexander-Puschkin","Mildred-Harnack","Gutenberg","Fritz-Reuter","Schule am Rathaus","Vincent-van-Gogh","Schule-am-Tierpark","Philipp-Reis","Paul-Schmidt","May-Ayim","Elsa-Neumann","Kosmos","12. Schule (Gymnasium)","16. Schule","Johann-Gottfried-Herder","Hans-und-Hilde-Coppi","Barnim","Manfred-von-Ardenne","Immanuel-Kant"],{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"style":{"font-size":"14px"},"className":"","sticky":true},null]},{"method":"addControl","args":["<div style=\"padding: 10px; background: white; border-radius: 5px; font-size: 12px; max-width: 250px; box-shadow: 0 0 15px rgba(0,0,0,0.2);\"><b>Warnhinweise:<\/b><br>\n  Es kann keine Haftung übernommen werden. Bitte alle Daten kontrollieren!<br>\n  <b>Datenquelle:<\/b> <br>\n       Lichtenberg: <a href=\"https://fragdenstaat.de/a/297001\">Schulamt über Fragdenstaat.de<\/a><br>\n       Pankow 2023: <a href=\"https://fragdenstaat.de/a/296999\">Schulamt über Fragdenstaat.de<\/a><br>\n       Pankow 2024/25: PDF-Daten vom Schulamt Pankow (pankow_2024_data.csv)<\/div>","bottomleft",null,"info legend"]}],"setView":[[52.56,13.48],12,[]],"limits":{"lat":[52.49188012,52.63292395],"lng":[13.36410433,13.5493047]}},"evals":[],"jsHooks":[]}</script>
+Kindern ab Jahrgangsstufe 7.</p>
+<p>Dabei werden die folgenden Kriterien angewendet</p>
+<ol style="list-style-type: decimal">
+<li>Härtefälle</li>
+<li>die Auswahlkriterien der Schule</li>
+<li>den Losentscheid.</li>
+</ol>
+<p>Die Auswahlkriterien der Schule beinhalten eine Durchschnittsnote des
+Kindes aus den Halbjahren 2 der 5. Klasse und Halbjahr 1 der 6. Klasse
+(Durchschnittsnoten). Um eine Auswahl der Schule zu treffen muss der
+Notenschnitt der Schule bekannt sein, damit man weiß ob die Schule für
+die Schülerin/den Schüler realistisch ist.</p>
+</div>
+<div id="haftungsausschluss" class="section level2">
+<h2>Haftungsausschluss</h2>
+<p>Es kann keine Haftung übernommen werden. Bitte alle Daten
+kontrollieren!<br></p>
+</div>
+<div id="datenquelle" class="section level2">
+<h2>Datenquelle</h2>
+<ul>
+<li>Lichtenberg 2023:
+<a href="https://fragdenstaat.de/a/297001">Schulamt über
+Fragdenstaat.de</a><br></li>
+<li>Lichtenberg 2025:
+<a href="https://fragdenstaat.de/a/352602">Schulamt über
+Fragdenstaat.de</a><br></li>
+<li>Pankow 2023: <a href="https://fragdenstaat.de/a/296999">Schulamt
+über Fragdenstaat.de</a><br></li>
+<li>Pankow 2024/25: <a href="https://fragdenstaat.de/a/354681">Schulamt
+über Fragdenstaat.de</a><br></li>
+</ul>
+</div>
+<div id="unterstützen" class="section level2">
+<h2>Unterstützen</h2>
+<ul>
+<li>Es fehlen die Daten aus Lichtenberg aus 2024. Wer mag gerne beim
+Schulamt Lichtenberg anfragen. Am besten per Fragdenstaat.de dann können
+die Noten von dort leicht übernommen werden.</li>
+</ul>
+</div>
+<div id="danksagung" class="section level2">
+<h2>Danksagung</h2>
+<ul>
+<li>Die Mitarbeitenden in den Ämtern</li>
+<li>Die Softwareprojekte R, RMarkdown, Leaflet</li>
+<li>Openstreetmap</li>
+<li>Mistral AI</li>
+</ul>
+</div>
 
 
 

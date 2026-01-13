@@ -3,8 +3,12 @@
 .RData
 .Ruserdata
 
-*.xml
-*.gml
-*.csv
-*.pdf
-*.xlsx
+# Ignore renv directory (R package management)
+renv/
+
+# Ignore temporary data files but track important data files
+data/*.tmp
+data/*.temp
+data/*.cache
+
+.claude/
