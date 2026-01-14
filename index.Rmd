@@ -117,7 +117,7 @@ map_output
 
 ```
 
-*In rot = Schulen mit Auswahl nach Noten. In grün = Scholen ohne Noten. In schwarz = Keine Daten*
+*In rot = Schulen mit Auswahl nach Noten. In grün = Schulen ohne Auswahl nach Noten. In schwarz = Keine Daten*
 
 ## Ziel
 Diese Seite versucht die  Noten auf einer Karte darzustellen, die über Fragdenstaat.de von den Schulämtern bereit gestellt wurden. Weitere Informationen zu den Schulen siehe: [https://www.bildung.berlin.de/Schulverzeichnis/](https://www.bildung.berlin.de/Schulverzeichnis/)
