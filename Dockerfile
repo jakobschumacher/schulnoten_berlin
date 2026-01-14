@@ -1,45 +1,44 @@
-# Dockerfile for Sekundarschulwahl Berlin Project
-# Uses rocker/rstudio as base image
+FROM rocker/rstudio:4.4
 
-FROM rocker/rstudio:latest
-
-# Set environment variables
-ENV TZ=Europe/Berlin
-
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    libssl-dev \
-    libxml2-dev \
-    libcurl4-openssl-dev \
+# Install system libraries required by spatial/tidy packages
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libudunits2-dev \
+    libgdal-dev \
+    libgeos-dev \
+    libproj-dev \
+    libsodium-dev \
     libfontconfig1-dev \
+    libfreetype6-dev \
     libharfbuzz-dev \
     libfribidi-dev \
-    libgit2-dev \
-    libicu-dev \
-    libx11-dev \
-    libfreetype6-dev \
-    libpng-dev \
-    libjpeg-dev \
-    libtiff5-dev \
-    && rm -rf /var/lib/apt/lists/*
+ && rm -rf /var/lib/apt/lists/*
 
-# Install base R packages
+# Relax compiler flags for packages that fail with -Werror=format-security
+RUN mkdir -p /root/.R /home/rstudio/.R && \
+    cat <<'EOF' | tee /root/.R/Makevars >/home/rstudio/.R/Makevars
+CPPFLAGS += -Wno-error=format-security -Wno-format-security
+CFLAGS += -Wno-error=format-security -Wno-format-security
+CXXFLAGS += -Wno-error=format-security -Wno-format-security
+EOF
+RUN chown -R rstudio:rstudio /home/rstudio/.R
 
-RUN Rscript -e 'install.packages(\"renv\", repos = \"https://cloud.r-project.org\")' && \
-    Rscript -e 'install.packages(\"tidyverse\", repos = \"https://cloud.r-project.org\")' && \
-    Rscript -e 'install.packages(\"sf\", repos = \"https://cloud.r-project.org\")' && \
-    Rscript -e 'install.packages(\"leaflet\", repos = \"https://cloud.r-project.org\")' && \
-    Rscript -e 'install.packages(\"httr\", repos = \"https://cloud.r-project.org\")' && \
-    Rscript -e 'install.packages(\"htmltools\", repos = \"https://cloud.r-project.org\")' && \
-    Rscript -e 'install.packages(\"rio\", repos = \"https://cloud.r-project.org\")' && \
-    Rscript -e 'install.packages(\"janitor\", repos = \"https://cloud.r-project.org\")' && \
-    Rscript -e 'install.packages(\"stringr\", repos = \"https://cloud.r-project.org\")'
+# Install renv
+RUN R -e "install.packages('renv', repos = 'https://cloud.r-project.org')"
 
-# Copy project files
-COPY . /home/rstudio/project
+# Set project dir
+WORKDIR /project
 
-# Set working directory
-WORKDIR /home/rstudio/project
+# Copy renv files first (for layer caching)
+COPY renv.lock renv.lock
+COPY renv/activate.R renv/activate.R
+# Copy settings if available
+COPY renv/settings.json renv/settings.json
 
-# Set default command
-CMD ["bash", "-c", "while true; do sleep 1000; done"]
+# Restore packages to project library (fast on rebuilds)
+RUN R -e "options(renv.settings.cache.enabled = FALSE); renv::restore()"
+
+# Copy rest of project
+COPY . .
+
+# Expose port
+EXPOSE 8787

@@ -5,12 +5,6 @@ html_document:
 ---
 
 ```{r, warning=FALSE, message=FALSE, echo=FALSE, out.width="100%"}
-library(tidyverse)
-library(httr)
-library(sf)
-library(leaflet)
-library(leaflet.extras)
-library(htmltools)
 
 # Read in data ------------------------------------------------------------
 
@@ -23,30 +17,30 @@ school_data <- get_school_data()
 school_summary <- create_school_summary(school_data)
 
 # Get map data
-schulen <- get_school_mapdata() %>%
-  rename(lon = X, lat = Y) %>%
-  filter(schultyp %in% c("Integrierte Sekundarschule", "Gymnasium")) %>%
-  mutate(name = str_remove(name, " Integrierte Sekundarschule")) %>%
-  mutate(name = str_remove(name, " Gemeinschaftsschule")) %>%
-  mutate(name = str_remove(name, "-Schule")) %>%
-  mutate(name = str_remove(name, "-Gemeinschaftsschule")) %>%
-  mutate(name = str_remove(name, "-Gymnasium"))
+schulen <- get_school_mapdata() |>
+  dplyr::rename(lon = X, lat = Y) |>
+  dplyr::filter(schultyp %in% c("Integrierte Sekundarschule", "Gymnasium")) |>
+  dplyr::mutate(name = stringr::str_remove(name, " Integrierte Sekundarschule")) |>
+  dplyr::mutate(name = stringr::str_remove(name, " Gemeinschaftsschule")) |>
+  dplyr::mutate(name = stringr::str_remove(name, "-Schule")) |>
+  dplyr::mutate(name = stringr::str_remove(name, "-Gemeinschaftsschule")) |>
+  dplyr::mutate(name = stringr::str_remove(name, "-Gymnasium"))
 
 # Join datasets -----------------------------------------------------------
 
-df <- schulen %>%
-  filter(bezirk == "Pankow" | bezirk == "Lichtenberg") %>%
-  select(name, schultyp, bezirk, website, lon, lat) %>%
-  left_join(school_summary, by = c("name", "bezirk")) %>%
-  mutate(gruppe = "note-vorhanden") %>%
-  mutate(gruppe = ifelse(latest_note == "ohne Note", "ohne-note", gruppe)) %>%
-  mutate(gruppe = ifelse(is.na(latest_note), "keine-daten", gruppe)) %>%
-  mutate(note_years = ifelse(is.na(note_years), "keine Daten", note_years))
+df <- schulen |>
+  dplyr::filter(bezirk == "Pankow" | bezirk == "Lichtenberg") |>
+  dplyr::select(name, schultyp, bezirk, website, lon, lat) |>
+  dplyr::left_join(school_summary, by = c("name", "bezirk")) |>
+  dplyr::mutate(gruppe = "note-vorhanden") |>
+  dplyr::mutate(gruppe = ifelse(latest_note == "ohne Note", "ohne-note", gruppe)) |>
+  dplyr::mutate(gruppe = ifelse(is.na(latest_note), "keine-daten", gruppe)) |>
+  dplyr::mutate(note_years = ifelse(is.na(note_years), "keine Daten", note_years))
 
 # Setup leaflet -----------------------------------------------------------
 
-pal <- colorFactor(c('black', 'darkred', 'darkgreen'),
-                   domain =c("note-vorhanden", "ohne-note", "keine-daten"))
+pal <- leaflet::colorFactor(c('black', 'darkred', 'darkgreen'),
+                            domain = c("note-vorhanden", "ohne-note", "keine-daten"))
 
 # Start leaflet -----------------------------------------------------------
 
@@ -72,15 +66,16 @@ create_label <- function(name, website, note_years) {
 }
 
 # Apply labels to each school
-df <- df %>%
-  rowwise() %>%
-  mutate(popup_label = list(create_label(name, website, note_years))) %>%
-  ungroup()
+popup_label <- vector("list", nrow(df))
+for (i in seq_along(popup_label)) {
+  popup_label[[i]] <- create_label(df$name[i], df$website[i], df$note_years[i])
+}
+df$popup_label <- popup_label
 
 # Output the map and legend separately
 # First, create and display the map with accessibility features
 map_output <- 
-  leaflet(options = leafletOptions(
+  leaflet::leaflet(options = leaflet::leafletOptions(
     zoomControl = TRUE,
     attributionControl = TRUE,
     preferCanvas = TRUE,
@@ -89,17 +84,17 @@ map_output <-
     accessibility = TRUE,     # Enable accessibility features
     fadeAnimation = TRUE,     # Smooth transitions for better UX
     zoomAnimation = TRUE
-  )) %>%
-    addTiles(
+  )) |>
+    leaflet::addTiles(
       attribution = 'Kartendaten &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> Mitwirkende',
-      options = tileOptions(
+      options = leaflet::tileOptions(
         minZoom = 10,
         maxZoom = 18,
         detectRetina = TRUE
       )
-    ) %>%
-    setView(lng = 13.48, lat = 52.56, zoom = 12) %>%
-    addCircleMarkers(
+    ) |>
+    leaflet::setView(lng = 13.48, lat = 52.56, zoom = 12) |>
+    leaflet::addCircleMarkers(
       lng = df$lon,
       lat = df$lat,
       color = pal(df$gruppe),
@@ -108,13 +103,13 @@ map_output <-
       fillOpacity = 0.8,
       popup = df$popup_label,
       label = df$name,
-      options = markerOptions(
+      options = leaflet::markerOptions(
         alt = paste(df$name, " - Schulnoten:", df$latest_note),  # Screen reader text
         title = paste(df$name, "(", df$bezirk, ")")           # Tooltip text
       )
-    ) %>%
-    addFullscreenControl(pseudoFullscreen = TRUE, position = "topright") %>%
-    addScaleBar(position = "bottomleft")
+    ) |>
+    leaflet.extras::addFullscreenControl(pseudoFullscreen = TRUE, position = "topright") |>
+    leaflet::addScaleBar(position = "bottomleft")
 
 
 # Display the map

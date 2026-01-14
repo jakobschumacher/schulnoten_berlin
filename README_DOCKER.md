@@ -96,7 +96,7 @@ DISABLE_AUTH=true
 
 This setup includes common R packages in the Docker image:
 - renv
-- tidyverse
+- dplyr
 - sf
 - leaflet
 - leaflet.extras

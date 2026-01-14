@@ -1,14 +1,16 @@
 services:
   rstudio:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: sekundarschulwahl_rstudio
+    build: .
+    image: sekundarschulwahl-rstudio
     ports:
       - "8787:8787"
-    volumes:
-      - ./:/home/rstudio/project
     environment:
       - DISABLE_AUTH=true
-      - TZ=Europe/Berlin
-    restart: unless-stopped
+      - RENV_PATHS_CACHE=/renv/cache  # Optional shared cache
+      - RSESSION_DEFAULT_WORKING_DIR=/home/rstudio/project
+      - RSESSION_DEFAULT_NEW_PROJECT_DIR=/home/rstudio/project
+      - R_PROFILE_USER=/home/rstudio/project/.Rprofile
+    volumes:
+      - .:/home/rstudio/project  # Mount project dir
+      - ./renv-cache:/renv/cache  # Optional host cache dir (create first)
+    working_dir: /home/rstudio/project

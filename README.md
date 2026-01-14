@@ -101,7 +101,7 @@ docker-compose down
 - RStudio (empfohlen)
 - Benötigte R-Pakete (werden automatisch installiert):
   ```r
-  install.packages(c("tidyverse", "httr", "sf", "leaflet", "leaflet.extras", "htmltools", "rio", "janitor", "stringr"))
+  install.packages(c("dplyr", "httr", "sf", "leaflet", "leaflet.extras", "htmltools", "rio", "janitor", "stringr"))
   ```
 
 ### Projekt starten

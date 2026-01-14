@@ -3,10 +3,6 @@
 #' This file provides functions to read and process school admission data
 #' from the unified data.csv file in the data/ directory.
 
-library(tidyverse)
-library(httr)
-library(sf)
-
 # Get map data ------------------------------------------------------------
 
 # Helper functions
@@ -43,12 +39,13 @@ get_school_mapdata <- function(url = "https://gdi.berlin.de/services/wfs/schulen
   # Clean up columns - keep only relevant columns
   cols_to_keep <- c("bsn", "schulname", "schulart", "bezirk", "email", "internet", "geometry", "X", "Y")
   existing_cols <- intersect(cols_to_keep, names(out))
-  out <- out %>% select(all_of(existing_cols))
+  out <- out |>
+    dplyr::select(dplyr::all_of(existing_cols))
 
   # Rename columns to match old format
-  if ("schulname" %in% names(out)) out <- out %>% rename(name = schulname)
-  if ("schulart" %in% names(out)) out <- out %>% rename(schultyp = schulart)
-  if ("internet" %in% names(out)) out <- out %>% rename(website = internet)
+  if ("schulname" %in% names(out)) out <- out |> dplyr::rename(name = schulname)
+  if ("schulart" %in% names(out)) out <- out |> dplyr::rename(schultyp = schulart)
+  if ("internet" %in% names(out)) out <- out |> dplyr::rename(website = internet)
 
   return(out)
 }
@@ -60,51 +57,51 @@ get_school_data <- function() {
     stop("data.csv not found in data/ directory")
   }
 
-  data <- read.csv("data/data.csv", stringsAsFactors = FALSE) %>%
+  data <- read.csv("data/data.csv", stringsAsFactors = FALSE) |>
     # Clean up school names by removing common suffixes
-    mutate(name = str_remove_all(name, " Integrierte Sekundarschule")) %>%
-    mutate(name = str_remove_all(name, " Gemeinschaftsschule")) %>%
+    dplyr::mutate(name = stringr::str_remove_all(name, " Integrierte Sekundarschule")) |>
+    dplyr::mutate(name = stringr::str_remove_all(name, " Gemeinschaftsschule")) |>
     # Be careful with -Schule removal to preserve names like "May-Ayim-Schule"
-    mutate(name = ifelse(
+    dplyr::mutate(name = ifelse(
       grepl("^[0-9]{1,2} Schule$", name),  # Keep "13. Schule", "14. Schule"
       name,
-      str_remove(name, "-Schule$")
-    )) %>%
-    mutate(name = str_remove_all(name, "-Gemeinschaftsschule")) %>%
-    mutate(name = str_remove_all(name, "-Gymnasium")) %>%
-    mutate(name = str_remove_all(name, "-Oberschule")) %>%
+      stringr::str_remove(name, "-Schule$")
+    )) |>
+    dplyr::mutate(name = stringr::str_remove_all(name, "-Gemeinschaftsschule")) |>
+    dplyr::mutate(name = stringr::str_remove_all(name, "-Gymnasium")) |>
+    dplyr::mutate(name = stringr::str_remove_all(name, "-Oberschule")) |>
     
     # Standardize "ohne Note" variations
-    mutate(note = ifelse(note == "ohne Note" | 
+    dplyr::mutate(note = ifelse(note == "ohne Note" | 
                         note == "alle" | 
                         note == "**" | 
-                        grepl("nicht übernachgefragt", note), "ohne Note", note)) %>%
+                        grepl("nicht übernachgefragt", note), "ohne Note", note)) |>
     
     # Clean up special cases
-    mutate(name = str_replace(name, "Schule am Tierpark", "Schule-am-Tierpark")) %>%
-    mutate(name = str_replace(name, "11K13", "13. Schule")) %>%
-    mutate(name = str_replace(name, "11K14", "14. Schule"))
+    dplyr::mutate(name = stringr::str_replace(name, "Schule am Tierpark", "Schule-am-Tierpark")) |>
+    dplyr::mutate(name = stringr::str_replace(name, "11K13", "13. Schule")) |>
+    dplyr::mutate(name = stringr::str_replace(name, "11K14", "14. Schule"))
 
   return(data)
 }
 
 # Function to create summary data for visualization
 create_school_summary <- function(school_data) {
-  school_data %>%
-    arrange(name, schuljahr) %>%
-    group_by(name, bezirk) %>%
-    summarise(
+  school_data |>
+    dplyr::arrange(name, schuljahr) |>
+    dplyr::group_by(name, bezirk) |>
+    dplyr::summarise(
       note_years = paste(schuljahr, ":", note, collapse = " | "),
-      latest_note = last(note),
-      schul_nr = last(schul_nr),
+      latest_note = dplyr::last(note),
+      schul_nr = dplyr::last(schul_nr),
       .groups = "drop"
     )
 }
 
 # Function to get the latest year for each school
 get_latest_year <- function(school_data) {
-  school_data %>%
-    group_by(name) %>%
-    summarise(latest_year = max(schuljahr, na.rm = TRUE)) %>%
-    ungroup()
+  school_data |>
+    dplyr::group_by(name) |>
+    dplyr::summarise(latest_year = max(schuljahr, na.rm = TRUE)) |>
+    dplyr::ungroup()
 }
