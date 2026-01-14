@@ -64,7 +64,6 @@ create_label <- function(name, website, note_years) {
   # Add ARIA attributes for better screen reader support
   content <- paste0(
     '<div role="dialog" aria-labelledby="school-name">',
-    '<h3 id="school-name" style="margin:0;padding:0;">', name, '</h3>',
     paste(label_parts, collapse = "<br/>"),
     '</div>'
   )
@@ -109,12 +108,6 @@ map_output <-
       fillOpacity = 0.8,
       popup = df$popup_label,
       label = df$name,
-      labelOptions = labelOptions(
-        style = list("font-size" = "14px", "font-weight" = "bold"),
-        direction = "auto",
-        noHide = TRUE,           # Keep labels visible for screen readers
-        textOnly = TRUE          # Better for accessibility
-      ),
       options = markerOptions(
         alt = paste(df$name, " - Schulnoten:", df$latest_note),  # Screen reader text
         title = paste(df$name, "(", df$bezirk, ")")           # Tooltip text
@@ -123,57 +116,13 @@ map_output <-
     addFullscreenControl(pseudoFullscreen = TRUE, position = "topright") %>%
     addScaleBar(position = "bottomleft")
 
-# Try to add help button if leaflet.extras is available
-tryCatch({
-  map_output <- map_output %>%
-    addEasyButton(
-      easyButton(
-        icon = "fa-info-circle",
-        title = "Hilfe anzeigen",
-        onClick = JS("alert('Klicken Sie auf eine Schulmarke für Details. Nutzen Sie die +/- Buttons zum Zoomen.')")
-      )
-    )
-}, error = function(e) {
-  message("leaflet.extras nicht verfügbar - Hilfe-Button wird nicht angezeigt")
-})
 
 # Display the map
 map_output
 
-# Add accessible legend
-legend_html <- paste0(
-  '<div class="legend-container">',
-  '<div class="legend-box" role="complementary" aria-label="Kartenlegende">',
-  '<h2 id="legend-title" style="margin-top:0;">Legende</h2>',
-  '<div role="list" aria-labelledby="legend-title">',
-  '<div role="listitem"><span style="color:darkred;font-weight:bold;">●</span> Schulen mit Notenauswahl</div>',
-  '<div role="listitem"><span style="color:darkgreen;font-weight:bold;">●</span> Schulen ohne Notenauswahl</div>',
-  '<div role="listitem"><span style="color:black;font-weight:bold;">●</span> Keine Daten verfügbar</div>',
-  '</div>',
-  '<div style="margin-top:10px;font-size:0.9em;">',
-  '<strong>Hinweis:</strong> Die Daten basieren auf offiziellen Angaben der Schulämter, ', 
-  'aber bitte überprüfen Sie die aktuellen Aufnahmekriterien direkt bei den Schulen.',
-  '</div>',
-  '</div>',
-  '</div>'
-)
-
-htmltools::HTML(legend_html)
-
 ```
 
-<!-- Skip link for keyboard users -->
-<a href="#main-content" class="skip-link">Direkt zum Inhalt springen</a>
-
-<div id="main-content"></div>
-
-*In rot = Schulen mit Auswahl nach Noten. In Grün = Scholen ohne Noten. In schwarz = Keine Daten*
-
-<!-- Screen reader announcement -->
-<div class="sr-only" aria-live="polite">
-  Interaktive Karte der Sekundarschulen in Berlin-Pankow und Berlin-Lichtenberg. 
-  Nutzen Sie die Pfeiltasten zum Navigieren und die Tab-Taste zum Wechseln zwischen den Steuerelementen.
-</div>
+*In rot = Schulen mit Auswahl nach Noten. In grün = Scholen ohne Noten. In schwarz = Keine Daten*
 
 ## Ziel
 Diese Seite versucht die  Noten auf einer Karte darzustellen, die über Fragdenstaat.de von den Schulämtern bereit gestellt wurden. Weitere Informationen zu den Schulen siehe: [https://www.bildung.berlin.de/Schulverzeichnis/](https://www.bildung.berlin.de/Schulverzeichnis/)
@@ -194,7 +143,6 @@ Es kann keine Haftung übernommen werden. Bitte alle Daten kontrollieren!<br>
 
 ## Datenquelle
 * Lichtenberg 2023: <a href="https://fragdenstaat.de/a/297001">Schulamt über Fragdenstaat.de</a><br>
-* Lichtenberg 2024: <a href="https://fragdenstaat.de/a/352602">Schulamt über Fragdenstaat.de</a><br>
 * Lichtenberg 2025: <a href="https://fragdenstaat.de/a/352602">Schulamt über Fragdenstaat.de</a><br>
 * Pankow 2023: <a href="https://fragdenstaat.de/a/296999">Schulamt über Fragdenstaat.de</a><br>
 * Pankow 2024/25: <a href="https://fragdenstaat.de/a/354681">Schulamt über Fragdenstaat.de</a><br>
