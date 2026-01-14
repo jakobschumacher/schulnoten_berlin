@@ -5,11 +5,10 @@
 
 # Ignore renv directory (R package management)
 renv/
+renv-cache/
 
 # Ignore temporary data files but track important data files
-data/*.tmp
-data/*.temp
-data/*.cache
+data/
 
 .claude/
 .env

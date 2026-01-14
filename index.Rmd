@@ -20,37 +20,18 @@ school_summary <- create_school_summary(school_data)
 schulen <- get_school_mapdata() |>
   dplyr::rename(lon = X, lat = Y) |>
   dplyr::filter(schultyp %in% c("Integrierte Sekundarschule", "Gymnasium")) |>
-  dplyr::mutate(name = stringr::str_remove(name, " \\(Integrierte Sekundarschule\\)")) |>
-  dplyr::mutate(name = stringr::str_remove(name, " \\(Gemeinschaftsschule\\)")) |>
-  # Be careful with -Schule removal to preserve names like "May-Ayim-Schule"
-  dplyr::mutate(name = ifelse(
-    grepl("^[0-9]{1,2}\. Schule$", name),  # Keep "13. Schule", "14. Schule"
-    name,
-    stringr::str_remove(name, "-Schule$")
-  )) |>
+  dplyr::mutate(name = stringr::str_remove(name, " Integrierte Sekundarschule")) |>
+  dplyr::mutate(name = stringr::str_remove(name, " Gemeinschaftsschule")) |>
+  dplyr::mutate(name = stringr::str_remove(name, "-Schule")) |>
   dplyr::mutate(name = stringr::str_remove(name, "-Gemeinschaftsschule")) |>
   dplyr::mutate(name = stringr::str_remove(name, "-Gymnasium"))
 
 # Join datasets -----------------------------------------------------------
 
-# First, add schul_nr to the map data by matching on name and bezirk
-# We'll use the CSV data to get the correct schul_nr for each school
-schulen_with_ids <- schulen |>
+df <- schulen |>
   dplyr::filter(bezirk == "Pankow" | bezirk == "Lichtenberg") |>
-  dplyr::select(name, schultyp, bezirk, website, lon, lat)
-
-# Create a reference table for schul_nr from CSV data
-schul_nr_reference <- data |>
-  dplyr::select(name, bezirk, schul_nr) |>
-  dplyr::distinct()
-
-# Join map data with schul_nr reference
-schulen_with_ids <- schulen_with_ids |>
-  dplyr::left_join(schul_nr_reference, by = c("name", "bezirk"))
-
-# Now join with school summary using schul_nr for more reliable matching
-df <- schulen_with_ids |>
-  dplyr::left_join(school_summary, by = c("schul_nr", "bezirk")) |>
+  dplyr::select(name, schultyp, bezirk, website, lon, lat) |>
+  dplyr::left_join(school_summary, by = c("name", "bezirk")) |>
   dplyr::mutate(gruppe = "note-vorhanden") |>
   dplyr::mutate(gruppe = ifelse(latest_note == "ohne Note", "ohne-note", gruppe)) |>
   dplyr::mutate(gruppe = ifelse(is.na(latest_note), "keine-daten", gruppe)) |>
