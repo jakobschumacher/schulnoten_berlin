@@ -156,6 +156,8 @@ Es kann keine Haftung übernommen werden. Bitte alle Daten kontrollieren!<br>
 
 ## Unterstützen
 * Es fehlen die Daten aus Lichtenberg aus 2024. Wer mag gerne beim Schulamt Lichtenberg anfragen. Am besten per Fragdenstaat.de dann können die Noten von dort leicht übernommen werden.
+* Gerne Verbesserungsvorschläge in die  [Issues im Github Repository](https://github.com/jakobschumacher/schulnoten_berlin/issues)
+schreiben. Benötigt einen Github account.
 
 ## Danksagung
 * Die Mitarbeitenden in den Ämtern
