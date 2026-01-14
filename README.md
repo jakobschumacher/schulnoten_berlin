@@ -67,7 +67,35 @@ Die Daten stammen von den Schulämtern Berlin-Pankow und Berlin-Lichtenberg und 
 
 ## Installation und Nutzung
 
-### Voraussetzungen
+### Option 1: Docker (Empfohlen) 🐳
+
+Die einfachste Methode ist die Verwendung von Docker, die alle Abhängigkeiten automatisch bereitstellt:
+
+#### Voraussetzungen
+- Docker installiert
+- Docker Compose installiert
+
+#### Schnellstart
+```bash
+# Docker-Container starten
+docker-compose up -d
+
+# RStudio im Browser öffnen: http://localhost:8787
+# Benutzername: rstudio
+# Passwort: Keines (Authentifizierung ist deaktiviert)
+
+# Beenden
+docker-compose down
+```
+
+**Vorteile:**
+- Keine Systemabhängigkeiten nötig
+- Konsistente Umgebung für alle Teammitglieder
+- Einfache Einrichtung
+
+### Option 2: Lokale R-Installation
+
+#### Voraussetzungen
 
 - R (Version 4.0 oder höher)
 - RStudio (empfohlen)

@@ -62,11 +62,11 @@ get_school_data <- function() {
 
   data <- read.csv("data/data.csv", stringsAsFactors = FALSE) %>%
     # Clean up school names by removing common suffixes
-    mutate(name = str_remove_all(name, " \(Integrierte Sekundarschule\)")) %>%
-    mutate(name = str_remove_all(name, " \(Gemeinschaftsschule\)")) %>%
-    # Be more careful with -Schule removal to preserve names like "May-Ayim-Schule"
+    mutate(name = str_remove_all(name, " Integrierte Sekundarschule")) %>%
+    mutate(name = str_remove_all(name, " Gemeinschaftsschule")) %>%
+    # Be careful with -Schule removal to preserve names like "May-Ayim-Schule"
     mutate(name = ifelse(
-      grepl("^[0-9]{1,2}\. Schule$", name),  # Keep "13. Schule", "14. Schule"
+      grepl("^[0-9]{1,2} Schule$", name),  # Keep "13. Schule", "14. Schule"
       name,
       str_remove(name, "-Schule$")
     )) %>%

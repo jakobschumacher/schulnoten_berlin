@@ -12,3 +12,4 @@ data/*.temp
 data/*.cache
 
 .claude/
+.env

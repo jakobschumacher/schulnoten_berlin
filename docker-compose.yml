@@ -1,0 +1,14 @@
+services:
+  rstudio:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sekundarschulwahl_rstudio
+    ports:
+      - "8787:8787"
+    volumes:
+      - ./:/home/rstudio/project
+    environment:
+      - DISABLE_AUTH=true
+      - TZ=Europe/Berlin
+    restart: unless-stopped
