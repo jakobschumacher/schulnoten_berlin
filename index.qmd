@@ -1,11 +1,18 @@
 ---
 title: "Schulnoten in Pankow und Lichtenberg"
-html_document:
-    css: ["styles.css"] 
+subtitle: "Welche Schule haben welche Noten für die Aufnahme nach der 7. Klasse"
+author: "Jakob Schumacher"
+date: 2026-01-13
+date-format: long
+title-block-banner: true
+lang: de
+format:
+  html:
+    css: styles.css
+    favicon: favicon.ico
 ---
 
 ```{r, warning=FALSE, message=FALSE, echo=FALSE, out.width="100%"}
-
 # Read in data ------------------------------------------------------------
 
 source("get_data.R")
