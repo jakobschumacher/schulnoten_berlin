@@ -31,7 +31,7 @@ school_summary <- create_school_summary(school_data)
 # Get map data
 schulen <- get_school_mapdata() |>
   dplyr::rename(lon = X, lat = Y) |>
-  dplyr::filter(schultyp %in% c("Integrierte Sekundarschule", "Gymnasium")) |>
+  dplyr::filter(schultyp %in% c("Integrierte Sekundarschule", "Gymnasium", "Gemeinschaftsschule")) |>
   dplyr::mutate(name = stringr::str_remove(name, " Integrierte Sekundarschule")) |>
   dplyr::mutate(name = stringr::str_remove(name, " Gemeinschaftsschule")) |>
   dplyr::mutate(name = stringr::str_remove(name, "-Schule")) |>
@@ -41,9 +41,10 @@ schulen <- get_school_mapdata() |>
 # Join datasets -----------------------------------------------------------
 
 df <- schulen |>
+  dplyr::rename(schul_nr = bsn) |>
   dplyr::filter(bezirk == "Pankow" | bezirk == "Lichtenberg") |>
-  dplyr::select(name, schultyp, bezirk, website, lon, lat) |>
-  dplyr::left_join(school_summary, by = c("name", "bezirk")) |>
+  dplyr::select(name, schultyp, bezirk, website, lon, lat, schul_nr) |>
+  dplyr::left_join(school_summary |> dplyr::select(-name, -bezirk) , by = "schul_nr") |>
   dplyr::mutate(gruppe = "note-vorhanden") |>
   dplyr::mutate(gruppe = ifelse(latest_note == "ohne Note", "ohne-note", gruppe)) |>
   dplyr::mutate(gruppe = ifelse(is.na(latest_note), "keine-daten", gruppe)) |>
